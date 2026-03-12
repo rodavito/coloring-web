@@ -11,6 +11,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PATH = process.env.ADMIN_PATH || '/admin';
 
+// Confiar en el proxy de Railway para el rate limiter
+app.set('trust proxy', 1);
+
 // Rate limiter para seguridad
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
