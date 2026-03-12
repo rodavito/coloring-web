@@ -45,6 +45,15 @@ app.use((req, res, next) => {
 });
 
 // Rutas
+app.get('/diagnostic', (req, res) => {
+    res.json({
+        status: 'Server is running',
+        has_db_url: !!process.env.DATABASE_URL,
+        has_cloudinary: !!process.env.CLOUDINARY_API_KEY,
+        port: process.env.PORT
+    });
+});
+
 app.use('/', publicRoutes);
 app.use(ADMIN_PATH, adminRoutes);
 
