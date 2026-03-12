@@ -1,0 +1,86 @@
+<%- include('../layout/header') %>
+
+    <div class="admin-form" style="max-width: 800px; animation: fadeIn 0.8s ease-out;">
+        <h1 style="margin-bottom: 0.5rem; letter-spacing: -1px;">Subir Nuevo Dibujo ✨</h1>
+        <p style="color: #888; margin-bottom: 2.5rem;">Completa los detalles para publicar tu nueva creación.</p>
+
+        <form action="<%= adminPath %>/upload" method="POST" enctype="multipart/form-data">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div style="flex: 1; min-width: 300px;">
+                    <div style="margin-bottom: 2rem;">
+                        <label
+                            style="display: block; width: 100%; aspect-ratio: 16/9; border: 2px dashed #ddd; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fafafa; transition: var(--transition);"
+                            onmouseover="this.style.borderColor='var(--primary)'; this.style.background='#fff0f3';"
+                            onmouseout="this.style.borderColor='#ddd'; this.style.background='#fafafa';">
+                            <input type="file" name="image" required style="display: none;"
+                                onchange="previewImage(this)">
+                            <div id="upload-placeholder" style="text-align: center;">
+                                <span style="font-size: 2rem;">🖼️</span>
+                                <p style="color: #888; margin-top: 0.5rem; font-size: 0.9rem;">Haz clic para subir JPG o
+                                    WEBP</p>
+                            </div>
+                        </label>
+                        <img id="preview" style="width: 100%; border-radius: 20px; margin-top: 1rem; display: none;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category_id">Categoría</label>
+                        <select name="category_id" id="category_id" required>
+                            <% categories.forEach(cat=> { %>
+                                <option value="<%= cat.id %>">
+                                    <%= cat.name %>
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label for="title">Título SEO ✨</label>
+                        <input type="text" name="title" id="title" placeholder="Ej: Lindo gatito para colorear"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alt_text">Texto Alternativo (Alt Text)</label>
+                        <input type="text" name="alt_text" id="alt_text" placeholder="Descripción breve para Google">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tags">Tags (separados por coma)</label>
+                        <input type="text" name="tags" id="tags" placeholder="animales, tierno, kawaii">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+                <label for="description">Descripción detallada</label>
+                <textarea name="description" id="description" rows="4"
+                    placeholder="Escribe una pequeña historia o descripción para este dibujo..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; padding: 1.2rem; font-size: 1.1rem; margin-top: 1rem;">
+                PUBLICAR DIBUJO ✅
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function previewImage(input) {
+            const reader = new FileReader();
+            const placeholder = document.getElementById('upload-placeholder');
+            reader.onload = function () {
+                const output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+            };
+            if (input.files && input.files[0]) {
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+    <%- include('../layout/footer') %>

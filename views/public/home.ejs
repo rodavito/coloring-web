@@ -1,0 +1,166 @@
+<%- include('../layout/header') %>
+
+    <div class="hero">
+        <div class="hero-box">
+            <h1>Dibujos gratis para Imprimir y Colorear</h1>
+            <p>Descarga gratis dibujos para colorear de diferentes categorías. Todos los diseños listos para imprimir.
+            </p>
+        </div>
+    </div>
+
+    <section class="featured-categories">
+        <h2 class="section-title">Categorías Destacadas</h2>
+        <div class="category-slider-wrapper">
+            <button class="slider-btn prev" id="slider-prev">❮</button>
+            <div class="category-grid slider-mode" id="category-slider">
+                <% categories.forEach(cat=> { %>
+                    <a href="/categoria/<%= cat.slug %>" class="category-card">
+                        <div class="category-icon">
+                            <svg class="icon-svg" viewBox="0 0 24 24" style="width: 50px; height: 50px;">
+                                <path
+                                    d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>
+                                <%= cat.name %>
+                            </h3>
+                        </div>
+                    </a>
+                    <% }) %>
+            </div>
+            <button class="slider-btn next" id="slider-next">❯</button>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('category-slider');
+            const prevBtn = document.getElementById('slider-prev');
+            const nextBtn = document.getElementById('slider-next');
+
+            if (slider && prevBtn && nextBtn) {
+                const scrollAmount = 300;
+
+                prevBtn.addEventListener('click', () => {
+                    slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+
+                const wrapper = document.querySelector('.category-slider-wrapper');
+                const toggleArrows = () => {
+                    const isAtStart = slider.scrollLeft <= 5;
+                    const isAtEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 5;
+
+                    prevBtn.style.display = isAtStart ? 'none' : 'flex';
+                    nextBtn.style.display = isAtEnd ? 'none' : 'flex';
+
+                    // Toggle G gradients
+                    if (wrapper) {
+                        wrapper.classList.toggle('show-left-fade', !isAtStart);
+                        wrapper.classList.toggle('show-right-fade', !isAtEnd);
+                    }
+                };
+
+                slider.addEventListener('scroll', toggleArrows);
+                window.addEventListener('resize', toggleArrows);
+                setTimeout(toggleArrows, 500);
+            }
+        });
+    </script>
+
+    <section class="recent-drawings">
+        <h2 class="section-title">Últimos dibujos añadidos</h2>
+        <div class="grid">
+            <% images.forEach(img=> { %>
+                <div class="card">
+                    <a href="/dibujo/<%= img.slug %>">
+                        <% const displaySrc=img.cloudinary_url ||
+                            `/assets/images/webp/${img.category_slug}/${img.filename}.webp`; %>
+                            <img src="<%= displaySrc %>" alt="<%= img.alt_text %>" loading="lazy">
+                    </a>
+                    <div class="card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <%= img.title %>
+                            </h3>
+                            <span class="card-category">
+                                <%= img.category_name %>
+                            </span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/dibujo/<%= img.slug %>" class="btn btn-view">Ver</a>
+                            <% const downloadSrc=img.cloudinary_url ||
+                                `/assets/images/jpg/${img.category_slug}/${img.filename}.jpg`; %>
+                                <a href="<%= downloadSrc %>" download="<%= img.slug %>" class="btn btn-download-sq"
+                                    title="Descargar">
+                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="#ffffff">
+                                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                                    </svg>
+                                </a>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+        <% if (typeof hasMore !=='undefined' && hasMore) { %>
+            <div id="load-more-container" style="text-align: center; margin-top: 4rem; margin-bottom: 4rem;">
+                <% const safeBaseUrl=locals.baseUrl || '/' ; const safeCurrentPage=locals.currentPage || 1; const
+                    sep=safeBaseUrl.includes('?') ? '&' : '?' ; const
+                    nextUrl=`${safeBaseUrl}${sep}page=${safeCurrentPage + 1}`; %>
+                    <a href="<%= nextUrl %>" id="load-more-btn" class="btn btn-primary">
+                        Ver más dibujos
+                    </a>
+            </div>
+            <% } %>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('load-more-btn');
+            const grid = document.querySelector('.grid');
+            const container = document.getElementById('load-more-container');
+
+            if (!btn) return;
+
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const url = btn.getAttribute('href');
+                btn.textContent = 'Cargando... ⏳';
+                btn.style.opacity = '0.7';
+                btn.style.pointerEvents = 'none';
+
+                try {
+                    const response = await fetch(url);
+                    const text = await response.text();
+                    const parser = new DOMParser();
+                    const html = parser.parseFromString(text, 'text/html');
+
+                    // Extraer nuevas tarjetas
+                    const newCards = html.querySelectorAll('.grid .card');
+                    newCards.forEach(card => {
+                        grid.appendChild(card);
+                    });
+
+                    // Actualizar o eliminar botón
+                    const newBtn = html.getElementById('load-more-btn');
+                    if (newBtn) {
+                        btn.setAttribute('href', newBtn.getAttribute('href'));
+                        btn.textContent = 'Ver más dibujos';
+                        btn.style.opacity = '1';
+                        btn.style.pointerEvents = 'auto';
+                    } else {
+                        container.remove();
+                    }
+                } catch (err) {
+                    console.error('Error:', err);
+                    window.location.href = url; // Fallback
+                }
+            });
+        });
+    </script>
+
+    <%- include('../layout/footer') %>

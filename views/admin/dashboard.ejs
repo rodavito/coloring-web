@@ -1,0 +1,88 @@
+<%- include('../layout/header') %>
+
+    <div
+        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; animation: fadeIn 0.8s ease-out; flex-wrap: wrap; gap: 2rem;">
+        <div>
+            <h1 style="font-size: 2.5rem; letter-spacing: -1px;">Panel de Control ✨</h1>
+            <p style="color: #888;">Gestiona tus dibujos y categorías de forma sencilla.</p>
+        </div>
+
+        <div style="flex: 1; min-width: 300px; max-width: 500px;">
+            <form action="<%= adminPath %>" method="GET" style="position: relative; display: flex; gap: 10px;">
+                <input type="text" name="q" value="<%= locals.q || '' %>"
+                    placeholder="Buscar por nombre, categoría o tag..."
+                    style="flex: 1; padding: 0.8rem 1.2rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                <button type="submit" class="btn btn-primary" style="padding: 0.8rem 1.5rem;">🔍</button>
+            </form>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <a href="<%= adminPath %>/upload" class="btn btn-primary">Subir Dibujo</a>
+            <a href="<%= adminPath %>/categories" class="btn btn-secondary">Categorías</a>
+            <a href="<%= adminPath %>/logout" class="btn" style="background: #f0f0f0; color: #888;">Salir</a>
+        </div>
+    </div>
+
+    <div
+        style="background: white; border-radius: 24px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: #f8fafc; border-bottom: 2px solid var(--border);">
+                    <th style="padding: 1.5rem;">Miniatura</th>
+                    <th style="padding: 1.5rem;">Título</th>
+                    <th style="padding: 1.5rem;">Categoría</th>
+                    <th style="padding: 1.5rem;">Fecha</th>
+                    <th style="padding: 1.5rem; text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (images.length> 0) { %>
+                    <% images.forEach(img=> { %>
+                        <tr style="border-bottom: 1px solid var(--border); transition: var(--transition);"
+                            onmouseover="this.style.background='#fbfcfe'" onmouseout="this.style.background='white'">
+                            <td style="padding: 1rem 1.5rem;">
+                                <% const displaySrc=img.cloudinary_url ||
+                                    `/assets/images/webp/${img.category_slug}/${img.filename}.webp`; %>
+                                    <img src="<%= displaySrc %>"
+                                        style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border);">
+                            </td>
+                            <td style="padding: 1rem 1.5rem; font-weight: 700;">
+                                <%= img.title %>
+                            </td>
+                            <td style="padding: 1rem 1.5rem;">
+                                <span
+                                    style="background: #f0f7ff; color: var(--secondary); padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;">
+                                    <%= img.category_name %>
+                                </span>
+                            </td>
+                            <td style="padding: 1rem 1.5rem; color: #94a3b8; font-size: 0.9rem;">
+                                <%= new Date(img.created_at).toLocaleDateString() %>
+                            </td>
+                            <td style="padding: 1rem 1.5rem; text-align: right;">
+                                <a href="<%= adminPath %>/edit/<%= img.id %>"
+                                    style="background: #f0f7ff; color: var(--secondary); text-decoration: none; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 700; transition: all 0.2s; margin-right: 0.5rem; display: inline-block;">
+                                    ✏️ Editar
+                                </a>
+                                <form action="<%= adminPath %>/delete/<%= img.id %>" method="POST"
+                                    style="display: inline;"
+                                    onsubmit="return confirm('¿Eliminar dibujo para siempre?')">
+                                    <button type="submit"
+                                        style="background: #fff1f2; color: #e11d48; border: none; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                                        🗑️ Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" style="padding: 5rem; text-align: center; color: #94a3b8;">Todavía
+                                        no has
+                                        subido ningún dibujo. ✨</td>
+                                </tr>
+                                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <%- include('../layout/footer') %>

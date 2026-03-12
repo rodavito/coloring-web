@@ -1,0 +1,68 @@
+<%- include('../layout/header') %>
+
+    <div style="display: flex; gap: 4rem; animation: fadeIn 0.8s ease-out;">
+        <div style="flex: 1.2;">
+            <h1 style="letter-spacing: -1px; margin-bottom: 2rem;">Categorías Creadas ✨</h1>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                <% categories.forEach(cat=> { %>
+                    <div style="background: white; padding: 1.5rem; border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; transition: var(--transition);"
+                        onmouseover="this.style.transform='translateY(-5px)'"
+                        onmouseout="this.style.transform='translateY(0)'">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            <div style="font-size: 1.5rem;">
+                                <%= cat.emoji || '📁' %>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a href="<%= adminPath %>/categories/edit/<%= cat.id %>" title="Editar"
+                                    style="text-decoration: none; font-size: 1.2rem;">✏️</a>
+                                <form action="<%= adminPath %>/categories/delete/<%= cat.id %>" method="POST"
+                                    onsubmit="return confirm('¿Estás seguro? Se borrarán todos los dibujos de esta categoría.')">
+                                    <button type="submit"
+                                        style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0;">🗑️</button>
+                                </form>
+                            </div>
+                        </div>
+                        <strong style="font-size: 1.1rem; color: var(--text);">
+                            <%= cat.name %>
+                        </strong>
+                        <span style="font-size: 0.8rem; color: #bbb; margin-top: 5px;">/categoria/<%= cat.slug %></span>
+                        <p
+                            style="font-size: 0.9rem; color: #666; margin-top: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-clamp: 2;">
+                            <%= cat.intro_text %>
+                        </p>
+                    </div>
+                    <% }) %>
+                        <% if (categories.length===0) { %>
+                            <p style="color: #999;">No hay categorías creadas aún.</p>
+                            <% } %>
+            </div>
+        </div>
+
+        <div style="flex: 0.8;">
+            <div class="admin-form" style="margin: 0; position: sticky; top: 100px;">
+                <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;">Añadir nueva ✨</h2>
+                <p style="color: #888; margin-bottom: 2rem; font-size: 0.9rem;">Crea una nueva sección para organizar
+                    tus dibujos.</p>
+                <form action="<%= adminPath %>/categories" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nombre de la Categoría</label>
+                        <input type="text" name="name" id="name" placeholder="Ej: Espacio exterior" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emoji">Emoji Representativo (Ej: 🚀)</label>
+                        <input type="text" name="emoji" id="emoji" placeholder="🚀" maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="intro_text">Texto Introductorio (SEO)</label>
+                        <textarea name="intro_text" id="intro_text" rows="3"
+                            placeholder="Descarga los mejores dibujos de..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 1rem;">Crear
+                        Categoría</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../layout/footer') %>

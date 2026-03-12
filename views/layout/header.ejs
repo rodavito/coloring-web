@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="<%= locals.description || 'Descarga e imprime miles de dibujos para colorear gratis. ¡Diversión creativa para todas las edades!' %>">
+    <meta name="keywords" content="<%= locals.tags || 'dibujos, colorear, imprimir, niños, arte' %>">
+    <meta property="og:title" content="<%= title %> | PintaColores">
+    <meta property="og:description"
+        content="<%= locals.description || 'Descarga e imprime miles de dibujos para colorear gratis.' %>">
+    <meta property="og:type" content="website">
+    <title>PintaColores</title>
+    <link rel="icon" type="image/png" href="/favicon.png?v=1">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="floating-decor">
+        <div class="decor-item" style="left: 5%; animation-delay: 0s;">🎨</div>
+        <div class="decor-item" style="left: 25%; animation-delay: 5s;">🖍️</div>
+        <div class="decor-item" style="left: 45%; animation-delay: 2s;">⭐</div>
+        <div class="decor-item" style="left: 65%; animation-delay: 8s;">✨</div>
+        <div class="decor-item" style="left: 85%; animation-delay: 1s;">🌈</div>
+        <div class="decor-item" style="left: 15%; animation-delay: 12s;">🎈</div>
+        <div class="decor-item" style="left: 35%; animation-delay: 15s;">🍭</div>
+        <div class="decor-item" style="left: 55%; animation-delay: 3s;">🎁</div>
+        <div class="decor-item" style="left: 75%; animation-delay: 4s;">🌸</div>
+        <div class="decor-item" style="left: 95%; animation-delay: 7s;">🐱</div>
+    </div>
+    <header class="main-header">
+        <a href="/" class="logo">
+            <img src="/img/logo-text.png" alt="PintaColores" class="logo-img-text">
+            <img src="/img/logo-icon.png" alt="" class="logo-img-icon">
+        </a>
+
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="nav-container" id="nav-container">
+            <button class="menu-close" id="menu-close" aria-label="Cerrar menú">&times;</button>
+            <nav class="nav-links">
+                <a href="/" class="nav-item <%= title === 'Inicio' ? 'active' : '' %>">Inicio</a>
+                <div class="nav-item dropdown" id="categories-dropdown">
+                    <a href="#" class="dropdown-toggle">Categorías <span class="arrow">▾</span></a>
+                    <div class="dropdown-content">
+                        <% if (locals.categories) { %>
+                            <% categories.forEach(cat=> { %>
+                                <a href="/categoria/<%= cat.slug %>">
+                                    <%= cat.emoji || '📁' %>
+                                        <%= cat.name %>
+                                </a>
+                                <% }) %>
+                                    <% } else { %>
+                                        <a href="/categoria/animales">🐶 Animales</a>
+                                        <a href="/categoria/fantasia">🦄 Fantasía</a>
+                                        <a href="/categoria/espacio">🚀 Espacio</a>
+                                        <a href="/categoria/profesiones-oficios">🧑‍🚒 Profesiones</a>
+                                        <a href="/categoria/vehiculos">🏎️ Vehículos</a>
+                                        <% } %>
+                    </div>
+                </div>
+            </nav>
+            <div class="header-right">
+                <form action="/search" method="GET" class="search-form">
+                    <input type="text" name="q" placeholder="Buscar dibujos..." class="search-input">
+                    <button type="submit" class="search-btn">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="#000000">
+                            <path
+                                d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="menu-overlay" id="menu-overlay"></div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const menuToggle = document.getElementById('menu-toggle');
+                const menuClose = document.getElementById('menu-close');
+                const navContainer = document.getElementById('nav-container');
+                const menuOverlay = document.getElementById('menu-overlay');
+                const dropdown = document.getElementById('categories-dropdown');
+
+                // Toggle Menu
+                const toggleMenu = () => {
+                    navContainer.classList.toggle('active');
+                    menuOverlay.classList.toggle('active');
+                    document.body.style.overflow = navContainer.classList.contains('active') ? 'hidden' : '';
+                };
+
+                if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+                if (menuClose) menuClose.addEventListener('click', toggleMenu);
+                if (menuOverlay) menuOverlay.addEventListener('click', toggleMenu);
+
+                // Mobile Dropdown Toggle
+                if (dropdown) {
+                    const toggle = dropdown.querySelector('.dropdown-toggle');
+                    toggle.addEventListener('click', (e) => {
+                        if (window.innerWidth <= 1024) {
+                            e.preventDefault();
+                            dropdown.classList.toggle('open');
+                        }
+                    });
+                }
+
+                // Close menu when clicking a link
+                navContainer.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 1024 && !link.classList.contains('dropdown-toggle')) {
+                            toggleMenu();
+                        }
+                    });
+                });
+            });
+        </script>
+    </header>
+    <main class="container">

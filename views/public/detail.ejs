@@ -1,0 +1,126 @@
+<%- include('../layout/header') %>
+
+    <div style="display: flex; gap: 4rem; flex-wrap: wrap; margin-top: 3rem; animation: fadeIn 0.8s ease-out;">
+        <div style="flex: 1.2; min-width: 300px;">
+            <div class="printable-area"
+                style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 4px solid white;">
+                <% const displaySrc=image.cloudinary_url ||
+                    `/assets/images/webp/${image.category_slug}/${image.filename}.webp`; %>
+                    <img src="<%= displaySrc %>" alt="<%= image.alt_text %>"
+                        style="width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.03));">
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1.5rem; flex-direction: column;">
+                <% const downloadSrc=image.cloudinary_url ||
+                    `/assets/images/jpg/${image.category_slug}/${image.filename}.jpg`; %>
+                    <a href="<%= downloadSrc %>" download="<%= image.slug %>" class="btn btn-primary"
+                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                        </svg>
+                        Descargar JPG
+                    </a>
+
+                    <button onclick="window.print()" class="btn btn-secondary"
+                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; background: #f0fdf4; color: #166534; border: 2px solid #bbf7d0;">
+                        🖨️ Imprimir / Generar PDF
+                    </button>
+            </div>
+
+            <style>
+                @media print {
+                    @page {
+                        size: A4;
+                        margin: 0;
+                    }
+
+                    body * {
+                        visibility: hidden;
+                    }
+
+                    .printable-area,
+                    .printable-area * {
+                        visibility: visible;
+                    }
+
+                    .printable-area {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: white !important;
+                    }
+
+                    .printable-area img {
+                        max-width: 90%;
+                        max-height: 90vh;
+                        object-fit: contain;
+                    }
+
+                    /* Remove any headers, footers, or ads */
+                    header,
+                    footer,
+                    .ad-slot,
+                    .decor-item,
+                    .nav-links,
+                    .header-right {
+                        display: none !important;
+                    }
+                }
+            </style>
+        </div>
+
+        <div style="flex: 0.8; min-width: 300px;">
+            <span
+                style="background: #f0f7ff; color: var(--secondary); padding: 0.6rem 1.5rem; border-radius: var(--pill); font-weight: 700; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block;">
+                <%= image.category_name %>
+            </span>
+            <h1
+                style="font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text); letter-spacing: -2px; line-height: 1.1;">
+                <%= image.title %>
+            </h1>
+
+            <div
+                style="margin: 2rem 0; padding: 2.5rem; background: var(--white); border-radius: var(--radius-lg); border: 2px solid var(--border); box-shadow: var(--shadow);">
+                <h3
+                    style="margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 12px; font-weight: 800;">
+                    Descripción
+                </h3>
+                <p style="color: #666; font-size: 1.15rem; line-height: 1.8; font-weight: 500;">
+                    <%= image.description
+                        || '¡Un dibujo increíble diseñado con amor para que te diviertas coloreando y desarrolles tu creatividad!'
+                        %>
+                </p>
+            </div>
+
+            <div style="margin-bottom: 3rem;">
+                <h3 style="margin-bottom: 1.2rem; font-size: 1.1rem; color: var(--text-light); font-weight: 700;">
+                    Palabras clave</h3>
+                <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                    <% if (image.tags) { %>
+                        <% image.tags.split(',').forEach(tag=> { %>
+                            <a href="/search?q=<%= encodeURIComponent(tag.trim()) %>" class="tag-link"
+                                style="text-decoration: none; background: white; padding: 0.6rem 1.2rem; border-radius: var(--pill); font-weight: 600; font-size: 0.9rem; border: 1px solid var(--border); color: #666; transition: var(--transition);">
+                                #<%= tag.trim() %>
+                            </a>
+                            <% }) %>
+                                <% } %>
+                </div>
+            </div>
+
+            <div class="ad-slot"
+                style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border-color: #FFE0E6; border-radius: var(--radius-lg);">
+                Publicidad
+            </div>
+        </div>
+    </div>
+
+    <div class="ad-slot" style="margin-top: 5rem; height: 150px;">
+        Publicidad Inferior
+    </div>
+
+    <%- include('../layout/footer') %>

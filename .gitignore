@@ -1,0 +1,10 @@
+node_modules/
+.env
+public/assets_backup/
+scripts/migrate-to-cloudinary.js
+scripts/update-admin.js
+scripts/change-password.js
+database/migration_v2.sql
+/tmp/
+.DS_Store
+*.log
