@@ -49,8 +49,10 @@ app.get('/diagnostic', (req, res) => {
     res.json({
         status: 'Server is running',
         has_db_url: !!process.env.DATABASE_URL,
+        has_db_url_alt: !!process.env.DB_URL,
         has_cloudinary: !!process.env.CLOUDINARY_API_KEY,
-        port: process.env.PORT
+        port: process.env.PORT,
+        env_keys: Object.keys(process.env).filter(k => !k.includes('PASS') && !k.includes('SECRET') && !k.includes('KEY'))
     });
 });
 
