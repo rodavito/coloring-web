@@ -45,15 +45,27 @@ app.use((req, res, next) => {
 });
 
 // Rutas
-app.get('/diagnostic', (req, res) => {
-    res.json({
-        status: 'Server is running',
-        has_db_url: !!process.env.DATABASE_URL,
-        has_db_url_alt: !!process.env.DB_URL,
-        has_cloudinary: !!process.env.CLOUDINARY_API_KEY,
-        port: process.env.PORT,
-        env_keys: Object.keys(process.env).filter(k => !k.includes('PASS') && !k.includes('SECRET') && !k.includes('KEY'))
-    });
+app.get('/diagnostic', async (req, res) => {
+    try {
+        const db = require('./models/db');
+        const catCount = await db.query('SELECT COUNT(*) FROM categories');
+        const imgCount = await db.query('SELECT COUNT(*) FROM images');
+
+        res.json({
+            status: 'Server is running',
+            has_db_url: !!process.env.DATABASE_URL,
+            db_categories: catCount.rows[0].count,
+            db_images: imgCount.rows[0].count,
+            port: process.env.PORT
+        });
+    } catch (err) {
+        res.json({
+            status: 'Server is running',
+            db_error: err.message,
+            has_db_url: !!process.env.DATABASE_URL,
+            port: process.env.PORT
+        });
+    }
 });
 
 app.use('/', publicRoutes);
