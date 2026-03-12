@@ -1,11 +1,15 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+const isProduction = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost');
+
+if (isProduction) {
+    console.log('--- Detectado entorno de producción. Intentando conectar a:', process.env.DATABASE_URL.split('@')[1] || 'URL no válida');
+}
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost')
-        ? { rejectUnauthorized: false }
-        : false
+    ssl: isProduction ? { rejectUnauthorized: false } : false
 });
 
 pool.on('connect', () => {
