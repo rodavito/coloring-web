@@ -1,15 +1,14 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-if (!process.env.DATABASE_URL) {
-    console.error('--- ERROR CRÍTICO: La variable DATABASE_URL está vacía o no existe ---');
+console.log('--- BUSCANDO DATABASE_URL ---');
+if (process.env.DATABASE_URL) {
+    console.log('--- DATABASE_URL ENCONTRADA (empieza con):', process.env.DATABASE_URL.substring(0, 15), '...');
+} else {
+    console.error('--- ERROR: DATABASE_URL NO EXISTE EN EL ENTORNO ---');
 }
 
 const isProduction = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost');
-
-if (isProduction) {
-    console.log('--- Intentando conectar a la BD de Railway ---');
-}
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
