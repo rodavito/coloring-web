@@ -29,6 +29,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100dvh;
+  overflow-x: clip;
 }
 
 .main-header {
