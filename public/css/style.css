@@ -334,7 +334,9 @@ body {
     position: fixed;
     top: 0;
     right: 0;
-    transform: translateX(100%);
+    display: flex;
+    transform: translateX(110%);
+    visibility: hidden;
     width: 320px;
     height: 100dvh;
     background: white;
@@ -345,12 +347,13 @@ body {
     align-items: stretch;
     padding: 6rem 2rem 6rem;
     margin: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
     gap: 3rem;
   }
 
   .nav-container.active {
     transform: translateX(0);
+    visibility: visible;
   }
 
   .menu-close {
