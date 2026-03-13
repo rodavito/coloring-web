@@ -332,7 +332,7 @@ body {
   .nav-container {
     position: fixed;
     top: 0;
-    right: -100%;
+    right: 0;\n    transform: translateX(100%);
     width: 320px;
     height: 100dvh;
     background: white;
