@@ -22,10 +22,6 @@
   padding: 0;
 }
 
-html {
-  overflow-x: clip;
-}
-
 body {
   font-family: 'Quicksand', sans-serif;
   background: var(--bg-gradient);
@@ -33,7 +29,6 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100dvh;
-  overflow-x: clip;
 }
 
 .main-header {
