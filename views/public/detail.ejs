@@ -75,10 +75,10 @@
         </div>
 
         <div style="flex: 0.8; min-width: 300px;">
-            <span
-                style="background: #f0f7ff; color: var(--secondary); padding: 0.6rem 1.5rem; border-radius: var(--pill); font-weight: 700; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block;">
+            <a href="/categoria/<%= image.category_slug %>"
+                style="text-decoration: none; background: #f0f7ff; color: var(--secondary); padding: 0.6rem 1.5rem; border-radius: var(--pill); font-weight: 700; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; transition: var(--transition);">
                 <%= image.category_name %>
-            </span>
+            </a>
             <h1
                 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text); letter-spacing: -2px; line-height: 1.1;">
                 <%= image.title %>

@@ -28,7 +28,7 @@ body {
   background-attachment: fixed;
   color: var(--text);
   line-height: 1.6;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .main-header {
@@ -334,14 +334,14 @@ body {
     top: 0;
     right: -100%;
     width: 320px;
-    height: 100vh;
+    height: 100dvh;
     background: white;
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
     z-index: 2000;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    padding: 6rem 2rem 2rem;
+    padding: 6rem 2rem 6rem;
     margin: 0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     gap: 3rem;
@@ -1011,15 +1011,113 @@ section {
   height: 60px;
 }
 
-/* Responsive fixes */
-@media (max-width: 600px) {
-  .main-header {
-    flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
+/* Responsive fixes and improvements */
+@media (max-width: 1024px) {
+  .nav-container {
+    width: 280px;
+    padding: 5rem 1.5rem 6rem;
   }
 
-  .search-input:focus {
-    width: 180px;
+  .nav-item {
+    padding: 0.8rem 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .main-header {
+    padding: 0.6rem 1rem;
+  }
+
+  .logo-img-text {
+    height: 35px;
+  }
+
+  .logo-img-icon {
+    height: 35px;
+  }
+
+  .container {
+    padding: 0 1rem;
+    margin: 1.5rem auto;
+  }
+
+  .hero-box {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .hero-box h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-box p {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .category-slider-wrapper {
+    padding: 0;
+    margin-bottom: 2.5rem;
+  }
+
+  .slider-btn {
+    display: none;
+  }
+
+  .category-grid.slider-mode {
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .category-grid.slider-mode .category-card {
+    min-width: 160px;
+    padding: 1.5rem;
+  }
+
+  .category-icon .icon-svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card-info {
+    padding: 1.2rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  .decor-item {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    width: 100%;
+  }
+
+  .hero-box {
+    padding: 2rem 1.2rem;
+  }
+
+  .hero-box h1 {
+    font-size: 1.5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -45,37 +45,6 @@ app.use((req, res, next) => {
 });
 
 // Rutas
-app.get('/diagnostic', async (req, res) => {
-    try {
-        const db = require('./models/db');
-        const catCount = await db.query('SELECT COUNT(*) FROM categories');
-        const imgCount = await db.query('SELECT COUNT(*) FROM images');
-
-        // Verificar si existe la columna emoji
-        const emojiCheck = await db.query(`
-            SELECT column_name 
-            FROM information_schema.columns 
-            WHERE table_name='categories' AND column_name='emoji'
-        `);
-
-        res.json({
-            status: 'Server is running',
-            has_db_url: !!process.env.DATABASE_URL,
-            db_categories: catCount.rows[0].count,
-            db_images: imgCount.rows[0].count,
-            has_emoji_column: emojiCheck.rows.length > 0,
-            port: process.env.PORT
-        });
-    } catch (err) {
-        res.json({
-            status: 'Server is running',
-            db_error: err.message,
-            has_db_url: !!process.env.DATABASE_URL,
-            port: process.env.PORT
-        });
-    }
-});
-
 app.use('/', publicRoutes);
 app.use(ADMIN_PATH, adminRoutes);
 
