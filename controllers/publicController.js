@@ -194,3 +194,42 @@ exports.getSitemap = async (req, res) => {
         res.status(500).send('Error generating sitemap');
     }
 };
+
+exports.getPrivacy = async (req, res) => {
+    try {
+        const catsResult = await db.query('SELECT * FROM categories ORDER BY name');
+        res.render('public/privacy', {
+            title: 'Política de Privacidad',
+            categories: catsResult.rows
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};
+
+exports.getCookies = async (req, res) => {
+    try {
+        const catsResult = await db.query('SELECT * FROM categories ORDER BY name');
+        res.render('public/cookies', {
+            title: 'Política de Cookies',
+            categories: catsResult.rows
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};
+
+exports.getLegal = async (req, res) => {
+    try {
+        const catsResult = await db.query('SELECT * FROM categories ORDER BY name');
+        res.render('public/legal', {
+            title: 'Aviso Legal',
+            categories: catsResult.rows
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};

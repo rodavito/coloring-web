@@ -7,5 +7,8 @@ router.get('/categoria/:slug', publicController.getCategory);
 router.get('/dibujo/:slug', publicController.getImage);
 router.get('/search', publicController.searchByTags);
 router.get('/sitemap.xml', publicController.getSitemap);
+router.get('/privacidad', publicController.getPrivacy);
+router.get('/cookies', publicController.getCookies);
+router.get('/aviso-legal', publicController.getLegal);
 
 module.exports = router;
