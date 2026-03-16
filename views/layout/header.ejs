@@ -25,6 +25,10 @@
     <% if (locals.adminPath && typeof ORIGINAL_URL !== 'undefined' && ORIGINAL_URL.startsWith(adminPath)) { %>
         <meta name="robots" content="noindex, nofollow">
     <% } %>
+
+    <% if (typeof ORIGINAL_URL !== 'undefined') { %>
+        <link rel="canonical" href="https://pintacolores.com<%= ORIGINAL_URL.split('?')[0] %>">
+    <% } %>
 </head>
 
 <body>
