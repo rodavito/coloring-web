@@ -233,3 +233,16 @@ exports.getLegal = async (req, res) => {
         res.status(500).send('Error en el servidor');
     }
 };
+
+exports.getAbout = async (req, res) => {
+    try {
+        const catsResult = await db.query('SELECT * FROM categories ORDER BY name');
+        res.render('public/about', {
+            title: 'Sobre Nosotros',
+            categories: catsResult.rows
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};
