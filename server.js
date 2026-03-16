@@ -41,6 +41,7 @@ app.use(session({
 app.use((req, res, next) => {
     res.locals.userId = req.session.userId || null;
     res.locals.adminPath = ADMIN_PATH;
+    res.locals.ORIGINAL_URL = req.originalUrl;
     next();
 });
 

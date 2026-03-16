@@ -21,6 +21,10 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816678097058395"
      crossorigin="anonymous"></script>
+
+    <% if (locals.adminPath && typeof ORIGINAL_URL !== 'undefined' && ORIGINAL_URL.startsWith(adminPath)) { %>
+        <meta name="robots" content="noindex, nofollow">
+    <% } %>
 </head>
 
 <body>
