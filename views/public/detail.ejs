@@ -97,6 +97,26 @@
                         margin: 0;
                     }
                 }
+
+                /* --- AJUSTE ESPECÍFICO PARA CELULARES --- */
+                /* Si la pantalla es de menos de 768px (móvil) aplicamos esto */
+                @media (max-width: 768px) {
+                    .printable-area {
+                        /* Aumentamos mucho más el margen inferior solo en el celu */
+                        padding-bottom: 4cm !important;
+                    }
+
+                    .printable-area img {
+                        /* Forzamos a que la imagen sea más chica para que suba */
+                        max-height: 75vh !important;
+                    }
+                }
+
+                /* 5. CONFIGURACIÓN DE PÁGINA */
+                @page {
+                    size: auto;
+                    margin: 0;
+                }
             </style>
         </div>
         <script>
