@@ -102,20 +102,25 @@
                 /* Si la pantalla es de menos de 768px (móvil) aplicamos esto */
                 @media (max-width: 768px) {
                     .printable-area {
-                        /* Aumentamos mucho más el margen inferior solo en el celu */
-                        padding-bottom: 4cm !important;
+                        /* Padding equilibrado: 2cm arriba/lados y 3cm abajo para el logo */
+                        padding: 2cm 1.5cm 3cm 1.5cm !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        /* Fuerza el centrado vertical en el espacio libre */
+                        justify-content: center !important;
                     }
 
                     .printable-area img {
-                        /* Forzamos a que la imagen sea más chica para que suba */
-                        max-height: 75vh !important;
+                        /* Bajamos un poquito más el alto para que la imagen "flote" con aire */
+                        max-height: 70vh !important;
+                        width: auto !important;
                     }
-                }
 
-                /* 5. CONFIGURACIÓN DE PÁGINA */
-                @page {
-                    size: auto;
-                    margin: 0;
+                    /* 5. CONFIGURACIÓN DE PÁGINA */
+                    @page {
+                        size: auto;
+                        margin: 0;
+                    }
                 }
             </style>
         </div>
