@@ -30,7 +30,7 @@
             <style>
                 @media print {
 
-                    /* 1. LIMPIEZA */
+                    /* 1. LIMPIEZA DE ELEMENTOS WEB */
                     #cookie-banner,
                     .floating-decor,
                     .decor-item,
@@ -48,7 +48,7 @@
                         display: none !important;
                     }
 
-                    /* 2. ELIMINAR PÁGINAS EXTRA */
+                    /* 2. CONFIGURACIÓN BASE (PC y Tablets) */
                     html,
                     body {
                         height: 100% !important;
@@ -56,13 +56,11 @@
                         margin: 0 !important;
                         padding: 0 !important;
                         overflow: hidden !important;
-                        break-after: avoid !important;
-                        break-before: avoid !important;
                         background: white !important;
                     }
 
-                    /* 3. CONTENEDOR AJUSTADO Y LIMPIO */
                     .printable-area {
+                        /* PC: Usamos el centrado que ya te funcionaba */
                         position: fixed !important;
                         top: 50% !important;
                         left: 50% !important;
@@ -71,73 +69,59 @@
                         height: 100% !important;
                         padding: 0.5cm 1cm 1.8cm 1cm !important;
                         box-sizing: border-box !important;
-
-                        /* ESTO QUITA LA SOMBRA Y EL BORDE QUE VES ARRIBA */
                         box-shadow: none !important;
                         border: none !important;
                         border-radius: 0 !important;
                         background: white !important;
+                        display: block !important;
                     }
 
-                    /* 4. IMAGEN PROPORCIONAL */
                     .printable-area img {
                         display: block !important;
-                        /* Centramos la imagen dentro del contenedor fixed */
                         margin: 0 auto !important;
                         max-width: 100% !important;
-                        max-height: 90vh !important;
+                        max-height: 88vh !important;
                         object-fit: contain !important;
-                        /* Quitamos filtros de sombra por si acaso */
                         filter: none !important;
                     }
 
-                    /* 5. CONFIGURACIÓN DE PÁGINA */
+                    /* 3. PARCHE ESPECÍFICO PARA IPHONE / CELULARES */
+                    /* Usamos 'print' y el ancho de pantalla para detectar el móvil */
+                    @media (max-width: 768px) {
+
+                        html,
+                        body {
+                            /* Safari de iPhone necesita esto 'visible' para no achicar la imagen */
+                            overflow: visible !important;
+                        }
+
+                        .printable-area {
+                            /* Quitamos el 'fixed' y 'transform' que rompen el iPhone */
+                            position: relative !important;
+                            top: auto !important;
+                            left: auto !important;
+                            transform: none !important;
+
+                            height: auto !important;
+                            min-height: 100vh !important;
+                            /* Más margen abajo para el logo en móvil */
+                            padding: 1cm 1cm 3.5cm 1cm !important;
+                        }
+
+                        .printable-area img {
+                            /* Bajamos un poco el alto para que el iPhone no cree 2da hoja */
+                            max-height: 75vh !important;
+                            width: auto !important;
+                        }
+                    }
+
+                    /* 4. CONFIGURACIÓN DE PÁGINA */
                     @page {
-                        size: a4;
+                        size: auto;
                         margin: 0;
                     }
                 }
-
-                /* --- AJUSTE ESPECÍFICO PARA CELULARES --- */
-                /* Si la pantalla es de menos de 768px (móvil) aplicamos esto */
-                @media screen and (max-width: 768px) {
-
-                    html,
-                    body {
-                        overflow: visible !important;
-                    }
-
-                    .printable-area {
-                        height: auto !important;
-                        min-height: 100vh !important;
-                        padding-bottom: 2.5cm !important;
-                        /* espacio extra para el logo */
-                    }
-
-                    .printable-area img {
-                        max-height: 75vh !important;
-                        /* achica un poco la imagen */
-                    }
-                }
-
-                @supports (-webkit-touch-callout: none) {
-
-                    .printable-area {
-                        position: static !important;
-                        transform: none !important;
-                        display: flex !important;
-                        justify-content: center !important;
-                        align-items: center !important;
-                        height: auto !important;
-                        min-height: 100% !important;
-                        padding: 1cm !important;
-                    }
-
-                    .printable-area img {
-                        max-height: 75% !important;
-                        width: auto !important;
-                    }
-                }
+            </style>
             </style>
         </div>
         <script>
