@@ -21,90 +21,84 @@
                         Descargar JPG
                     </a>
 
-                    <button onclick="imprimir()" class="btn btn-secondary"
+                    <button onclick="window.print()" class="btn btn-secondary"
                         style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; background: #f0fdf4; color: #166534; border: 2px solid #bbf7d0;">
                         🖨️ Imprimir / Generar PDF
                     </button>
             </div>
- 
+
             <style>
                 @media print {
-                    @page {
-                        size: A4;
-                        margin: 0;
-                    }
 
-                    body * {
-                        visibility: hidden;
-                    }
-
-                    .printable-area,
-                    .printable-area * {
-                        visibility: visible;
-                    }
-
-                    .printable-area {
-                        position: static;
-                        text-align: center;
-                    }
-
-                    .printable-area img {
-                        max-width: 100%;
-                        max-height: 100vh;
-                        object-fit: contain;
-                        display: block;
-                        margin: 0 auto;
-                    }
-
-                    /* 🔥 clave: rotar si es horizontal */
-                    body.landscape .printable-area img {
-                        transform: rotate(90deg);
-                        max-height: 100vw;
-                    }
-
-                    /* 🚫 evita páginas en blanco */
-                    .printable-area,
-                    img {
-                        page-break-inside: avoid;
-                        break-inside: avoid;
-                    }
-
+                    /* 1. OCULTAR */
+                    #cookie-banner,
+                    .floating-decor,
+                    .decor-item,
+                    .ad-slot,
                     header,
                     footer,
-                    .ad-slot,
-                    .decor-item,
-                    .nav-links,
-                    .header-right {
+                    nav,
+                    button,
+                    .btn,
+                    [style*="flex: 0.8"] {
                         display: none !important;
+                    }
+
+                    /* 2. Ajuste del lienzo de impresión */
+                    html,
+                    body {
+                        height: 100vh !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        overflow: hidden !important;
+                        background: white !important;
+                    }
+
+                    /* 3. Contenedor con MARGEN DE SEGURIDAD REFORZADO */
+                    .printable-area {
+                        display: flex !important;
+                        justify-content: center;
+                        align-items: center;
+                        /* Centra el dibujo en el espacio restante */
+                        width: 100vw !important;
+                        height: 100vh !important;
+
+                        /* Aumentamos el margen inferior a 2.5cm para proteger el logo */
+                        padding: 1.0cm 1.0cm 1.8cm 1.0cm !important;
+
+                        box-sizing: border-box !important;
+                        border: none !important;
+                        background: white !important;
+                    }
+
+                    /* 4. Ajuste de la imagen (Prioridad: Altura Segura) */
+                    .printable-area img {
+                        /* Bajamos al 85% para que el logo suba notablemente */
+                        max-height: 85vh !important;
+                        max-width: 90vw !important;
+                        width: auto !important;
+                        height: auto !important;
+
+                        display: block;
+                        margin: 0 auto;
+                        object-fit: contain !important;
+                        filter: none !important;
+                        /* Sin sombras para que no pesen en el borde */
+                    }
+
+                    /* 5. Configuramos el papel para ignorar los bordes del navegador */
+                    @page {
+                        size: auto;
+                        margin: 0;
                     }
                 }
             </style>
-
-            <script>
-                function aplicarOrientacion() {
-                    const img = document.querySelector(".printable-area img");
-                    if (!img) return;
-
-                    if (img.naturalWidth > img.naturalHeight) {
-                        document.body.classList.add("landscape");
-                        document.body.classList.remove("portrait");
-                    } else {
-                        document.body.classList.add("portrait");
-                        document.body.classList.remove("landscape");
-                    }
-                }
-
-                // ✅ SE EJECUTA SIEMPRE (Ctrl+P o botón)
-                window.addEventListener("beforeprint", aplicarOrientacion);
-
-                // 👇 fallback extra (por si algún navegador falla)
-                function imprimir() {
-                    aplicarOrientacion();
-                    window.print();
-                }
-            </script>
         </div>
-
+        <script>
+            function imprimir() {
+                window.print();
+            }
+        </script>
         <div style="flex: 0.8; min-width: 300px;">
             <a href="/categoria/<%= image.category_slug %>"
                 style="text-decoration: none; background: #f0f7ff; color: var(--secondary); padding: 0.6rem 1.5rem; border-radius: var(--pill); font-weight: 700; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; transition: var(--transition);">
@@ -150,7 +144,8 @@
         </div>
     </div>
 
-    <div class="ad-slot" style="margin-top: 5rem; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
+    <div class="ad-slot"
+        style="margin-top: 5rem; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
         <!-- Ad Slot Inferior -->
     </div>
 
