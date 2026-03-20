@@ -119,6 +119,25 @@
                         /* achica un poco la imagen */
                     }
                 }
+
+                @supports (-webkit-touch-callout: none) {
+
+                    .printable-area {
+                        position: static !important;
+                        transform: none !important;
+                        display: flex !important;
+                        justify-content: center !important;
+                        align-items: center !important;
+                        height: auto !important;
+                        min-height: 100% !important;
+                        padding: 1cm !important;
+                    }
+
+                    .printable-area img {
+                        max-height: 75% !important;
+                        width: auto !important;
+                    }
+                }
             </style>
         </div>
         <script>
