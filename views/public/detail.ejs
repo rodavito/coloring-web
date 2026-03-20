@@ -27,51 +27,84 @@
                     </button>
             </div>
 
-            <style>
+            <style id="print-styles">
                 @media print {
-                    @page {
-                        size: A4;
-                        margin: 0;
+                    /* Ocultar absolutamente todo por defecto */
+                    html, body {
+                        height: 100vh;
+                        overflow: hidden;
+                        margin: 0 !important;
+                        padding: 0 !important;
                     }
 
-                    body * {
-                        visibility: hidden;
+                    body > * {
+                        display: none !important;
                     }
 
-                    .printable-area,
-                    .printable-area * {
-                        visibility: visible;
-                    }
-
+                    /* Mostrar solo el área imprimible */
                     .printable-area {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        display: flex !important;
+                        position: fixed !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        width: 100vw !important;
+                        height: 100vh !important;
                         background: white !important;
+                        z-index: 9999999 !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                    }
+
+                    .printable-area * {
+                        display: block !important;
                     }
 
                     .printable-area img {
-                        max-width: 90%;
-                        max-height: 90vh;
-                        object-fit: contain;
+                        max-width: 98% !important;
+                        max-height: 98% !important;
+                        width: auto !important;
+                        height: auto !important;
+                        object-fit: contain !important;
+                        margin: auto !important;
                     }
 
-                    /* Remove any headers, footers, or ads */
-                    header,
-                    footer,
-                    .ad-slot,
-                    .decor-item,
-                    .nav-links,
-                    .header-right {
-                        display: none !important;
+                    /* Quitar márgenes de impresión */
+                    @page {
+                        margin: 0;
                     }
                 }
             </style>
+
+            <script>
+                // Detectar orientación de la imagen para la impresión
+                window.addEventListener('load', () => {
+                    const img = document.querySelector('.printable-area img');
+                    if (!img) return;
+
+                    const setPrintOrientation = () => {
+                        let styleTag = document.getElementById('print-orientation-style');
+                        if (!styleTag) {
+                            styleTag = document.createElement('style');
+                            styleTag.id = 'print-orientation-style';
+                            document.head.appendChild(styleTag);
+                        }
+
+                        if (img.naturalWidth > img.naturalHeight) {
+                            styleTag.innerHTML = '@media print { @page { size: landscape; margin: 0; } }';
+                        } else {
+                            styleTag.innerHTML = '@media print { @page { size: portrait; margin: 0; } }';
+                        }
+                    };
+
+                    if (img.complete) {
+                        setPrintOrientation();
+                    } else {
+                        img.onload = setPrintOrientation;
+                    }
+                });
+            </script>
         </div>
 
         <div style="flex: 0.8; min-width: 300px;">
