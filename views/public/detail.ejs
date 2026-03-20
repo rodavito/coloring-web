@@ -30,7 +30,7 @@
             <style>
                 @media print {
 
-                    /* 1. LIMPIEZA (Mantenemos lo anterior) */
+                    /* 1. LIMPIEZA */
                     #cookie-banner,
                     .floating-decor,
                     .decor-item,
@@ -48,51 +48,52 @@
                         display: none !important;
                     }
 
-                    /* 2. FIX PARA MÓVILES: Forzar posición y evitar scroll */
+                    /* 2. ELIMINAR PÁGINAS EXTRA */
                     html,
                     body {
-                        width: 100% !important;
                         height: 100% !important;
+                        width: 100% !important;
                         margin: 0 !important;
                         padding: 0 !important;
-                        overflow: visible !important;
-                        /* En móvil 'hidden' a veces corta la imagen */
-                        position: relative !important;
+                        overflow: hidden !important;
+                        break-after: avoid !important;
+                        break-before: avoid !important;
+                        background: white !important;
                     }
 
-                    /* 3. CONTENEDOR: Eliminamos el Flexbox que bugea a los móviles */
+                    /* 3. CONTENEDOR AJUSTADO Y LIMPIO */
                     .printable-area {
-                        display: block !important;
-                        /* Cambiamos Flex por Block para mayor compatibilidad */
+                        position: fixed !important;
+                        top: 50% !important;
+                        left: 50% !important;
+                        transform: translate(-50%, -50%) !important;
                         width: 100% !important;
-                        height: auto !important;
-                        margin: 0 !important;
-                        /* El margen de seguridad lo damos con padding */
-                        padding: 1cm 1cm 2.5cm 1cm !important;
+                        height: 100% !important;
+                        padding: 0.5cm 1cm 1.8cm 1cm !important;
                         box-sizing: border-box !important;
+
+                        /* ESTO QUITA LA SOMBRA Y EL BORDE QUE VES ARRIBA */
+                        box-shadow: none !important;
+                        border: none !important;
+                        border-radius: 0 !important;
+                        background: white !important;
                     }
 
-                    /* 4. LA IMAGEN: El secreto para que no se vea "un pedazo" */
+                    /* 4. IMAGEN PROPORCIONAL */
                     .printable-area img {
                         display: block !important;
-                        /* Usamos 'max' para que si es pequeña no se estire, 
-           pero si es grande no se salga de la pantalla */
-                        width: 100% !important;
-                        height: auto !important;
-                        max-height: 80vh !important;
-                        /* Un poco menos de altura para asegurar el logo en móvil */
-                        object-fit: contain !important;
+                        /* Centramos la imagen dentro del contenedor fixed */
                         margin: 0 auto !important;
+                        max-width: 100% !important;
+                        max-height: 90vh !important;
+                        object-fit: contain !important;
+                        /* Quitamos filtros de sombra por si acaso */
                         filter: none !important;
-                        /* Fix para evitar cortes raros en Chrome mobile */
-                        page-break-inside: avoid !important;
-                        break-inside: avoid !important;
                     }
 
                     /* 5. CONFIGURACIÓN DE PÁGINA */
                     @page {
-                        size: portrait;
-                        /* Forzamos modo vertical */
+                        size: auto;
                         margin: 0;
                     }
                 }
