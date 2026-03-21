@@ -48,85 +48,74 @@
                         display: none !important;
                     }
 
-                    /* 2. RESET AGRESIVO PARA EVITAR 2DA PÁGINA */
+                    /* 2. RESET PARA EVITAR 2DA PÁGINA */
                     html,
                     body {
                         margin: 0 !important;
                         padding: 0 !important;
-                        height: 99% !important;
-                        /* No llegamos al 100% para evitar el desborde */
+                        height: 100% !important;
                         width: 100% !important;
                         overflow: hidden !important;
-                        /* Corta cualquier cosa que intente irse a la pág 2 */
+                        /* Clave para matar la 2da página */
                         background: white !important;
                         font-size: 0 !important;
-                        /* Elimina espacios vacíos entre elementos */
                         line-height: 0 !important;
                     }
 
-                    /* 3. CONTENEDOR (Estilo bloque para máxima compatibilidad) */
+                    /* 3. CONTENEDOR (Configuración para PC) */
                     .printable-area {
                         display: block !important;
                         position: relative !important;
                         width: 100% !important;
-                        height: 99% !important;
+                        height: 100% !important;
                         margin: 0 !important;
-                        /* Bajamos el padding para que la imagen tenga más lugar y no empuje */
-                        padding: 0.5cm 0.5cm 2.2cm 0.5cm !important;
+                        padding: 0.5cm 0.5cm 2cm 0.5cm !important;
                         box-sizing: border-box !important;
                         text-align: center !important;
                         page-break-after: avoid !important;
-                        /* Instrucción explícita: NO saltar página */
                     }
 
-                    /* 4. IMAGEN (Grande y centrada) */
+                    /* 4. IMAGEN (Configuración para PC) */
                     .printable-area img {
                         display: inline-block !important;
                         vertical-align: middle !important;
-                        max-width: 98% !important;
-                        /* Bajamos al 80vh para asegurar que el logo PintaColores y el dibujo entren en 1 hoja */
-                        max-height: 80vh !important;
+                        max-width: 95% !important;
+                        max-height: 82vh !important;
+                        /* Bajamos a 82 para asegurar espacio del logo */
                         width: auto !important;
                         height: auto !important;
                         filter: none !important;
                         box-shadow: none !important;
                     }
 
-                    /* 5. ELIMINAR LINKS Y MARGENES TÉCNICOS */
-                    @page {
-                        size: auto;
-                        margin: 0mm !important;
-                        /* Esto quita la URL de abajo en iPhone/Chrome */
-                    }
-                }
-                    /* 3. PARCHE ESPECÍFICO PARA IPHONE / CELULARES */
-                    /* Usamos 'print' y el ancho de pantalla para detectar el móvil */
+                    /* 5. PARCHE ESPECÍFICO PARA CELULARES (DENTRO DEL PRINT) */
                     @media (max-width: 768px) {
 
                         html,
                         body {
-                            /* Safari de iPhone necesita esto 'visible' para no achicar la imagen */
                             overflow: visible !important;
+                            /* Safari iPhone necesita esto */
                         }
 
                         .printable-area {
-                            /* Quitamos el 'fixed' y 'transform' que rompen el iPhone */
                             position: relative !important;
-                            top: auto !important;
-                            left: auto !important;
-                            transform: none !important;
-
                             height: auto !important;
-                            min-height: 100vh !important;
-                            /* Más margen abajo para el logo en móvil */
-                            padding: 1cm 1cm 3.5cm 1cm !important;
+                            min-height: 98vh !important;
+                            padding: 0.5cm 0.5cm 3cm 0.5cm !important;
+                            /* Espacio extra logo móvil */
                         }
 
                         .printable-area img {
-                            /* Bajamos un poco el alto para que el iPhone no cree 2da hoja */
-                            max-height: 75vh !important;
-                            width: auto !important;
+                            max-height: 70vh !important;
+                            /* Lo bajamos más en móvil para evitar la 2da hoja */
+                            max-width: 90% !important;
                         }
+                    }
+
+                    /* 6. ELIMINAR LINKS Y MÁRGENES TÉCNICOS */
+                    @page {
+                        size: auto;
+                        margin: 0mm !important;
                     }
                 }
             </style>
