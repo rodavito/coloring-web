@@ -48,52 +48,57 @@
                         display: none !important;
                     }
 
-                    /* 2. CONFIGURACIÓN DEL CUERPO (Clave para iPhone) */
+                    /* 2. RESET AGRESIVO PARA EVITAR 2DA PÁGINA */
                     html,
                     body {
-                        height: 100% !important;
-                        width: 100% !important;
                         margin: 0 !important;
                         padding: 0 !important;
-                        /* 'visible' ayuda a Safari a no comprimir la imagen */
-                        overflow: visible !important;
+                        height: 99% !important;
+                        /* No llegamos al 100% para evitar el desborde */
+                        width: 100% !important;
+                        overflow: hidden !important;
+                        /* Corta cualquier cosa que intente irse a la pág 2 */
                         background: white !important;
+                        font-size: 0 !important;
+                        /* Elimina espacios vacíos entre elementos */
+                        line-height: 0 !important;
                     }
 
-                    /* 3. CONTENEDOR (Ajustamos el tamaño para que sea más grande) */
+                    /* 3. CONTENEDOR (Estilo bloque para máxima compatibilidad) */
                     .printable-area {
                         display: block !important;
+                        position: relative !important;
                         width: 100% !important;
-                        height: auto !important;
-                        margin: 0 auto !important;
-                        /* Reducimos paddings para que la imagen gane tamaño */
-                        padding: 0.5cm 0.5cm 2.5cm 0.5cm !important;
+                        height: 99% !important;
+                        margin: 0 !important;
+                        /* Bajamos el padding para que la imagen tenga más lugar y no empuje */
+                        padding: 0.5cm 0.5cm 2.2cm 0.5cm !important;
                         box-sizing: border-box !important;
                         text-align: center !important;
+                        page-break-after: avoid !important;
+                        /* Instrucción explícita: NO saltar página */
                     }
 
-                    /* 4. LA IMAGEN (Más grande pero segura) */
+                    /* 4. IMAGEN (Grande y centrada) */
                     .printable-area img {
                         display: inline-block !important;
-                        /* Subimos al 98% de ancho y 85% de alto para que se vea potente */
+                        vertical-align: middle !important;
                         max-width: 98% !important;
-                        max-height: 85vh !important;
+                        /* Bajamos al 80vh para asegurar que el logo PintaColores y el dibujo entren en 1 hoja */
+                        max-height: 80vh !important;
                         width: auto !important;
                         height: auto !important;
-                        margin: 0 auto !important;
-                        object-fit: contain !important;
                         filter: none !important;
-                        /* Evita que Safari rompa la imagen en dos */
-                        page-break-inside: avoid !important;
-                        break-inside: avoid !important;
+                        box-shadow: none !important;
                     }
 
+                    /* 5. ELIMINAR LINKS Y MARGENES TÉCNICOS */
                     @page {
                         size: auto;
-                        /* Margen 0 oculta los encabezados y pies de página (el link) */
-                        margin: 0;
+                        margin: 0mm !important;
+                        /* Esto quita la URL de abajo en iPhone/Chrome */
                     }
-
+                }
                     /* 3. PARCHE ESPECÍFICO PARA IPHONE / CELULARES */
                     /* Usamos 'print' y el ancho de pantalla para detectar el móvil */
                     @media (max-width: 768px) {
