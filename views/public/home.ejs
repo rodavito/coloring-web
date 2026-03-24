@@ -93,10 +93,13 @@
                         </div>
                         <div class="card-actions">
                             <a href="/dibujo/<%= img.slug %>" class="btn btn-view">Ver</a>
-                            <% const downloadSrc=img.cloudinary_url ||
-                                `/assets/images/jpg/${img.category_slug}/${img.filename}.jpg`; %>
-                                <a href="<%= downloadSrc %>" download="<%= img.slug %>" class="btn btn-download-sq"
-                                    title="Descargar">
+                            <% 
+                                const downloadSrc = img.cloudinary_url 
+                                    ? img.cloudinary_url.replace(/\.webp$/, '.jpg') 
+                                    : `/assets/images/jpg/${img.category_slug}/${img.filename}.jpg`; 
+                            %>
+                            <a href="<%= downloadSrc %>" download="<%= img.slug %>.jpg" class="btn btn-download-sq"
+                                title="Descargar JPG">
                                     <svg class="icon-svg" viewBox="0 0 24 24" fill="#ffffff">
                                         <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
                                     </svg>
@@ -162,5 +165,48 @@
             });
         });
     </script>
+
+    <section class="info-section">
+        <div class="info-content">
+            <h2>Información para Padres y Educadores</h2>
+            
+            <div class="info-text-block">
+                <h3>🎨 Beneficios del Coloreado</h3>
+                <p>
+                    Colorear es una actividad esencial para el desarrollo de la <strong>motricidad fina</strong> y la coordinación. 
+                    En PintaColores, cada dibujo está diseñado para estimular la creatividad y la concentración de los niños de forma divertida y gratuita.
+                </p>
+            </div>
+
+            <div class="info-text-block">
+                <h3>🚀 Creatividad sin Límites</h3>
+                <p>
+                    Desde animales tiernos hasta naves espaciales, nuestra galería se actualiza constantemente. Ofrecemos contenido 
+                    único y original para que siempre haya una nueva aventura esperando ser pintada.
+                </p>
+            </div>
+
+            <div class="info-text-block">
+                <h3>🖨️ Guía de Uso</h3>
+                <p>
+                    Nuestra plataforma es 100% segura. Solo tienes que elegir un dibujo, descargarlo como JPG de alta calidad 
+                    o imprimirlo directamente. Todos los diseños están optimizados para papel A4.
+                </p>
+                <ul>
+                    <li>1. Navega por las categorías.</li>
+                    <li>2. Selecciona tu dibujo favorito.</li>
+                    <li>3. ¡Descarga o imprime y a pintar!</li>
+                </ul>
+            </div>
+
+            <div class="info-text-block">
+                <h3>🌟 Nuestro Compromiso</h3>
+                <p>
+                    Trabajamos para ofrecer la mejor colección de dibujos para imprimir. Cada trazo está cuidado para asegurar 
+                    que los niños tengan una experiencia de coloreado óptima y gratificante.
+                </p>
+            </div>
+        </div>
+    </section>
 
     <%- include('../layout/footer') %>
