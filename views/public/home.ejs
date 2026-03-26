@@ -166,47 +166,256 @@
         });
     </script>
 
-    <section class="info-section">
+    <section class="info-section accordion-section">
         <div class="info-content">
-            <h2>Información para Padres y Educadores</h2>
+            <h2 class="accordion-main-title">Información para Padres y Educadores</h2>
             
-            <div class="info-text-block">
-                <h3>🎨 Beneficios del Coloreado</h3>
-                <p>
-                    Colorear es una actividad esencial para el desarrollo de la <strong>motricidad fina</strong> y la coordinación. 
-                    En PintaColores, cada dibujo está diseñado para estimular la creatividad y la concentración de los niños de forma divertida y gratuita.
-                </p>
-            </div>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">
+                        <span class="accordion-title">🎨 Beneficios del Coloreado</span>
+                        <span class="accordion-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p>
+                                Colorear es una actividad esencial para el desarrollo de la <strong>motricidad fina</strong> y la coordinación. 
+                                En PintaColores, cada dibujo está diseñado para estimular la creatividad y la concentración de los niños de forma divertida y gratuita.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="info-text-block">
-                <h3>🚀 Creatividad sin Límites</h3>
-                <p>
-                    Desde animales tiernos hasta naves espaciales, nuestra galería se actualiza constantemente. Ofrecemos contenido 
-                    único y original para que siempre haya una nueva aventura esperando ser pintada.
-                </p>
-            </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">
+                        <span class="accordion-title">🚀 Creatividad sin Límites</span>
+                        <span class="accordion-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p>
+                                Desde animales tiernos hasta naves espaciales, nuestra galería se actualiza constantemente. Ofrecemos contenido 
+                                único y original para que siempre haya una nueva aventura esperando ser pintada.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="info-text-block">
-                <h3>🖨️ Guía de Uso</h3>
-                <p>
-                    Nuestra plataforma es 100% segura. Solo tienes que elegir un dibujo, descargarlo como JPG de alta calidad 
-                    o imprimirlo directamente. Todos los diseños están optimizados para papel A4.
-                </p>
-                <ul>
-                    <li>1. Navega por las categorías.</li>
-                    <li>2. Selecciona tu dibujo favorito.</li>
-                    <li>3. ¡Descarga o imprime y a pintar!</li>
-                </ul>
-            </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">
+                        <span class="accordion-title">🖨️ Guía de Uso</span>
+                        <span class="accordion-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p>
+                                Nuestra plataforma es 100% segura. Solo tienes que elegir un dibujo, descargarlo como JPG de alta calidad 
+                                o imprimirlo directamente. Todos los diseños están optimizados para papel A4.
+                            </p>
+                            <ul class="accordion-list">
+                                <li><strong>1.</strong> Navega por las categorías.</li>
+                                <li><strong>2.</strong> Selecciona tu dibujo favorito.</li>
+                                <li><strong>3.</strong> ¡Descarga o imprime y a pintar!</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="info-text-block">
-                <h3>🌟 Nuestro Compromiso</h3>
-                <p>
-                    Trabajamos para ofrecer la mejor colección de dibujos para imprimir. Cada trazo está cuidado para asegurar 
-                    que los niños tengan una experiencia de coloreado óptima y gratificante.
-                </p>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">
+                        <span class="accordion-title">🌟 Nuestro Compromiso</span>
+                        <span class="accordion-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p>
+                                Trabajamos para ofrecer la mejor colección de dibujos para imprimir. Cada trazo está cuidado para asegurar 
+                                que los niños tengan una experiencia de coloreado óptima y gratificante.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+
+    <style>
+        .accordion-section {
+            padding: 4rem 1rem;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border-radius: var(--radius-lg, 24px);
+            margin: 4rem auto;
+            max-width: 900px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .accordion-main-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text, #2d3748);
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .accordion-item {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .accordion-item:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.1);
+        }
+
+        .accordion-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+
+        .accordion-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text, #1a202c);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .accordion-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header[aria-expanded="true"] .accordion-icon {
+            transform: rotate(180deg);
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .accordion-header[aria-expanded="true"] .accordion-title {
+            color: #4f46e5;
+        }
+
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fafafa;
+        }
+
+        .accordion-header[aria-expanded="true"] + .accordion-content {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion-content-inner {
+            overflow: hidden;
+            padding: 0 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease, padding 0.3s ease;
+        }
+
+        .accordion-header[aria-expanded="true"] + .accordion-content .accordion-content-inner {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            opacity: 1;
+            transition-delay: 0.1s;
+        }
+
+        .accordion-content p {
+            margin: 0;
+            line-height: 1.7;
+            color: #4b5563;
+            font-size: 1.05rem;
+        }
+
+        .accordion-list {
+            margin-top: 1rem;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .accordion-list li {
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .accordion-list li strong {
+            color: #4f46e5;
+            background: #eef2ff;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .accordion-section {
+                padding: 2.5rem 1rem;
+                margin: 2rem 1rem;
+            }
+            .accordion-main-title {
+                font-size: 1.8rem;
+            }
+            .accordion-title {
+                font-size: 1.05rem;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const isExpanded = header.getAttribute('aria-expanded') === 'true';
+                    
+                    // Close all others
+                    accordionHeaders.forEach(h => {
+                        h.setAttribute('aria-expanded', 'false');
+                    });
+                    
+                    // Toggle current
+                    if (!isExpanded) {
+                        header.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+        });
+    </script>
 
     <%- include('../layout/footer') %>
