@@ -19,8 +19,10 @@
                 "@type": "Organization",
                 "name": "PintaColores"
               },
-              "description": "<%= (image.description || 'Dibujo para colorear gratuito de ' + image.title).replace(/"/g, '&quot;') %>",
-              "name": "<%= image.title.replace(/"/g, '&quot;') %>",
+              "creditText": "PintaColores",
+              "copyrightNotice": "© PintaColores",
+              "description": "<%= (image.description || 'Dibujo para colorear gratuito de ' + image.title).replace(/\"/g, '&quot;') %>",
+              "name": "<%= image.title.replace(/\"/g, '&quot;') %>",
               "license": "https://pintacolores.com/aviso-legal",
               "acquireLicensePage": "https://pintacolores.com/aviso-legal"
             }
