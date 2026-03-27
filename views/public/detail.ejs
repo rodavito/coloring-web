@@ -29,13 +29,10 @@
             </script>
 
             <div style="margin-top: 2rem; display: flex; gap: 1.5rem; flex-direction: column;">
-                <% 
-                    const downloadSrc = image.cloudinary_url 
-                        ? image.cloudinary_url.replace(/\.webp$/, '.jpg') 
-                        : `/assets/images/jpg/${image.category_slug}/${image.filename}.jpg`; 
-                %>
-                <a href="<%= downloadSrc %>" download="<%= image.slug %>.jpg" class="btn btn-primary"
-                    style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <% const downloadSrc=image.cloudinary_url ? image.cloudinary_url.replace(/\.webp$/, '.jpg' ) :
+                    `/assets/images/jpg/${image.category_slug}/${image.filename}.jpg`; %>
+                    <a href="<%= downloadSrc %>" download="<%= image.slug %>.jpg" class="btn btn-primary"
+                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px;">
                         <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
                             <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
                         </svg>
@@ -160,12 +157,12 @@
                 style="margin: 2rem 0; padding: 2.5rem; background: var(--white); border-radius: var(--radius-lg); border: 2px solid var(--border); box-shadow: var(--shadow);">
                 <h3
                     style="margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 12px; font-weight: 800;">
-                    🎨 Descripción y Consejos
+                    Descripción y Consejos
                 </h3>
                 <div style="color: #666; font-size: 1.15rem; line-height: 1.8; font-weight: 500;">
                     <%- image.description
-                        || '¡Un dibujo increíble diseñado con amor para que te diviertas coloreando! Descarga este dibujo de ' + image.title + ' y deja volar tu imaginación con tus colores favoritos.'
-                        %>
+                        || '¡Un dibujo increíble diseñado con amor para que te diviertas coloreando! Descarga este dibujo de '
+                        + image.title + ' y deja volar tu imaginación con tus colores favoritos.' %>
                 </div>
             </div>
 
