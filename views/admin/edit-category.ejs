@@ -21,6 +21,11 @@
                     <small style="color: #888;">Este texto aparecerá debajo del título en la página de la
                         categoría.</small>
                 </div>
+                <div class="form-group">
+                    <label for="seo_text">Texto SEO Extendido (bloque inferior)</label>
+                    <textarea name="seo_text" id="seo_text" rows="8" placeholder="Podés pegar aquí párrafos completos con HTML básico como &lt;p&gt;, &lt;strong&gt;, etc."><%= category.seo_text || '' %></textarea>
+                    <small style="color: #888;">Este bloque aparece debajo del grid de imágenes, ideal para SEO y AdSense. Podés usar etiquetas HTML como &lt;p&gt; y &lt;strong&gt;.</small>
+                </div>
 
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button type="submit" class="btn btn-secondary" style="flex: 1; padding: 1rem;">Guardar

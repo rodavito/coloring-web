@@ -58,6 +58,47 @@
         </div>
         <% } %>
 
+    <% if (locals.categorySeo) { %>
+        <section class="category-seo">
+            <%- locals.categorySeo %>
+        </section>
+
+        <style>
+            .category-seo {
+                max-width: 800px;
+                margin: 4rem auto;
+                padding: 0 1.5rem;
+                text-align: center;
+            }
+            .category-seo h2 {
+                font-size: 1.8rem;
+                font-weight: 800;
+                color: var(--text, #2d3748);
+                margin-bottom: 1.5rem;
+                letter-spacing: -0.5px;
+            }
+            .category-seo p {
+                font-size: 1.1rem;
+                line-height: 1.75;
+                color: #4b5563;
+                margin-bottom: 1.2rem;
+                text-align: justify;
+            }
+            @media (max-width: 768px) {
+                .category-seo {
+                    margin: 3rem auto;
+                }
+                .category-seo h2 {
+                    font-size: 1.5rem;
+                }
+                .category-seo p {
+                    font-size: 1.05rem;
+                    text-align: left;
+                }
+            }
+        </style>
+    <% } %>
+
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
                     const btn = document.getElementById('load-more-btn');
