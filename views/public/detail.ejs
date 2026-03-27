@@ -1,7 +1,7 @@
 <%- include('../layout/header') %>
 
-    <div style="display: flex; gap: 4rem; flex-wrap: wrap; margin-top: 3rem; animation: fadeIn 0.8s ease-out;">
-        <div style="flex: 1.2; min-width: 300px;">
+    <div class="detail-layout">
+        <div class="detail-image-col">
             <div class="printable-area"
                 style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 4px solid white;">
                 <% const displaySrc=image.cloudinary_url ||
@@ -143,43 +143,35 @@
                 window.print();
             }
         </script>
-        <div style="flex: 0.8; min-width: 300px;">
-            <a href="/categoria/<%= image.category_slug %>"
-                style="text-decoration: none; background: #f0f7ff; color: var(--secondary); padding: 0.6rem 1.5rem; border-radius: var(--pill); font-weight: 700; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; transition: var(--transition);">
+        <div class="detail-info-col">
+            <a href="/categoria/<%= image.category_slug %>" class="detail-category-badge">
                 <%= image.category_name %>
             </a>
-            <h1
-                style="font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text); letter-spacing: -2px; line-height: 1.1;">
+            <h1 class="detail-title">
                 <%= image.title %>
             </h1>
 
-            <div
-                style="margin: 2rem 0; padding: 2.5rem; background: var(--white); border-radius: var(--radius-lg); border: 2px solid var(--border); box-shadow: var(--shadow);">
-                <h3
-                    style="margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 12px; font-weight: 800;">
-                    Descripción y Consejos
-                </h3>
-                <div style="color: #666; font-size: 1.15rem; line-height: 1.8; font-weight: 500;">
+            <div class="detail-description">
+                <h2 class="detail-description-title">Descripción y Consejos</h2>
+                <div class="detail-description-body">
                     <%- image.description
                         || '¡Un dibujo increíble diseñado con amor para que te diviertas coloreando! Descarga este dibujo de '
                         + image.title + ' y deja volar tu imaginación con tus colores favoritos.' %>
                 </div>
             </div>
 
-            <div style="margin-bottom: 3rem;">
-                <h3 style="margin-bottom: 1.2rem; font-size: 1.1rem; color: var(--text-light); font-weight: 700;">
-                    Palabras clave</h3>
-                <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-                    <% if (image.tags) { %>
-                        <% image.tags.split(',').forEach(tag=> { %>
-                            <a href="/search?q=<%= encodeURIComponent(tag.trim()) %>" class="tag-link"
-                                style="text-decoration: none; background: white; padding: 0.6rem 1.2rem; border-radius: var(--pill); font-weight: 600; font-size: 0.9rem; border: 1px solid var(--border); color: #666; transition: var(--transition);">
-                                #<%= tag.trim() %>
-                            </a>
-                            <% }) %>
-                                <% } %>
+            <% if (image.tags) { %>
+            <div class="detail-tags">
+                <span class="detail-tags-label">Palabras clave</span>
+                <div class="detail-tags-list">
+                    <% image.tags.split(',').forEach(tag=> { %>
+                        <a href="/buscar?q=<%= encodeURIComponent(tag.trim()) %>" class="tag-link">
+                            #<%= tag.trim() %>
+                        </a>
+                    <% }) %>
                 </div>
             </div>
+            <% } %>
 
             <div class="ad-slot"
                 style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border-color: #FFE0E6; border-radius: var(--radius-lg);">
@@ -192,5 +184,130 @@
         style="margin-top: 5rem; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
         <!-- Ad Slot Inferior -->
     </div>
+
+    <style>
+        /* === DETAIL PAGE LAYOUT === */
+        .detail-layout {
+            display: flex;
+            gap: 3.5rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+            animation: fadeIn 0.8s ease-out;
+            align-items: flex-start;
+        }
+        .detail-image-col {
+            flex: 1.1;
+            min-width: 280px;
+            position: sticky;
+            top: 100px;
+        }
+        .detail-info-col {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        /* === CATEGORY BADGE === */
+        .detail-category-badge {
+            text-decoration: none;
+            background: #f0f7ff;
+            color: var(--secondary);
+            padding: 0.5rem 1.2rem;
+            border-radius: var(--pill);
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 1.2rem;
+            display: inline-block;
+            transition: var(--transition);
+        }
+        .detail-category-badge:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* === TITLE === */
+        .detail-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0.8rem 0 1.5rem;
+            color: var(--text);
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        /* === DESCRIPTION (editorial style) === */
+        .detail-description {
+            margin: 0 0 2rem;
+            padding-left: 1.25rem;
+            border-left: 4px solid var(--primary, #f9a8d4);
+        }
+        .detail-description-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+        .detail-description-body {
+            color: #444;
+            font-size: 1.05rem;
+            line-height: 1.85;
+        }
+        .detail-description-body p {
+            margin: 0 0 1rem;
+        }
+        .detail-description-body strong {
+            color: var(--text);
+        }
+
+        /* === TAGS === */
+        .detail-tags {
+            margin-bottom: 2.5rem;
+        }
+        .detail-tags-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #bbb;
+            margin-bottom: 0.8rem;
+        }
+        .detail-tags-list {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .tag-link {
+            text-decoration: none;
+            background: #f8f8f8;
+            padding: 0.4rem 1rem;
+            border-radius: var(--pill);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            color: #666;
+            transition: var(--transition);
+        }
+        .tag-link:hover {
+            background: var(--primary, #f9a8d4);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 900px) {
+            .detail-layout {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .detail-image-col {
+                position: static;
+            }
+            .detail-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
 
     <%- include('../layout/footer') %>
