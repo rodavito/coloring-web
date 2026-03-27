@@ -162,11 +162,11 @@
                     style="margin-bottom: 1rem; font-size: 1.3rem; display: flex; align-items: center; gap: 12px; font-weight: 800;">
                     🎨 Descripción y Consejos
                 </h3>
-                <p style="color: #666; font-size: 1.15rem; line-height: 1.8; font-weight: 500;">
-                    <%= image.description
+                <div style="color: #666; font-size: 1.15rem; line-height: 1.8; font-weight: 500;">
+                    <%- image.description
                         || '¡Un dibujo increíble diseñado con amor para que te diviertas coloreando! Descarga este dibujo de ' + image.title + ' y deja volar tu imaginación con tus colores favoritos.'
                         %>
-                </p>
+                </div>
             </div>
 
             <div style="margin-bottom: 3rem;">
