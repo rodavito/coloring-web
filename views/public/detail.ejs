@@ -1,7 +1,6 @@
 <%- include('../layout/header') %>
 
     <div class="detail-layout">
-
         <div class="detail-image-col">
             <div class="printable-area"
                 style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 4px solid white;">
@@ -11,10 +10,27 @@
                         style="width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.03));">
             </div>
 
+            <script type="application/ld+json">
+            {
+              "@context": "https://schema.org/",
+              "@type": "ImageObject",
+              "contentUrl": "<%= displaySrc.startsWith('http') ? displaySrc : 'https://pintacolores.com' + displaySrc %>",
+              "creator": {
+                "@type": "Organization",
+                "name": "PintaColores"
+              },
+              "creditText": "PintaColores",
+              "copyrightNotice": "© PintaColores",
+              "description": "<%= (image.description || 'Dibujo para colorear gratuito de ' + image.title).replace(/\"/g, '&quot;') %>",
+              "name": "<%= image.title.replace(/\"/g, '&quot;') %>",
+              "license": "https://pintacolores.com/aviso-legal",
+              "acquireLicensePage": "https://pintacolores.com/aviso-legal"
+            }
+            </script>
+
             <div style="margin-top: 2rem; display: flex; gap: 1.5rem; flex-direction: column;">
                 <% const downloadSrc=image.cloudinary_url ? image.cloudinary_url.replace(/\.webp$/, '.jpg' ) :
                     `/assets/images/jpg/${image.category_slug}/${image.filename}.jpg`; %>
-
                     <a href="<%= downloadSrc %>" download="<%= image.slug %>.jpg" class="btn btn-primary"
                         style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px;">
                         <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
@@ -23,21 +39,80 @@
                         Descargar JPG
                     </a>
 
-                    <a href="/imprimir/<%= image.slug %>" target="_blank" class="btn btn-secondary"
-                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; border: none; text-decoration: none;">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                            <path
-                                d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" />
-                        </svg>
-                        Imprimir / Generar PDF
-                    </a>
+                    <button onclick="window.print()" class="btn btn-secondary"
+                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; background: #f0fdf4; color: #166534; border: 2px solid #bbf7d0;">
+                        🖨️ Imprimir / Generar PDF
+                    </button>
             </div>
+
+            <style>
+                @media print {
+                    /* 1. Ocultar todo lo innecesario */
+                    header, footer, nav, .ad-slot, button, .btn, .detail-info-col, #cookie-banner, .floating-decor {
+                        display: none !important;
+                    }
+
+                    /* 2. Configuración de página y body */
+                    @page {
+                        size: auto;
+                        margin: 10mm !important; /* Margen físico real */
+                    }
+
+                    html, body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        height: auto !important;
+                        background: white !important;
+                    }
+
+                    /* 3. Contenedor de la imagen */
+                    .detail-layout {
+                        display: block !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+
+                    .detail-image-col {
+                        display: block !important;
+                        width: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        position: static !important;
+                    }
+
+                    .printable-area {
+                        display: block !important;
+                        width: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        border: none !important;
+                        box-shadow: none !important;
+                        text-align: center !important;
+                    }
+
+                    /* 4. Imagen: El corazón del ajuste */
+                    .printable-area img {
+                        display: block !important;
+                        margin: 0 auto !important;
+                        max-width: 100% !important;
+                        max-height: 95vh !important; /* Casi toda la página, pero con margen */
+                        width: auto !important;
+                        height: auto !important;
+                        page-break-inside: avoid !important;
+                        filter: none !important;
+                    }
+                }
+            </style>
         </div>
+        <script>
+            function imprimir() {
+                window.print();
+            }
+        </script>
         <div class="detail-info-col">
             <a href="/categoria/<%= image.category_slug %>" class="detail-category-badge">
                 <%= image.category_name %>
             </a>
-
             <h1 class="detail-title">
                 <%= image.title %>
             </h1>
@@ -52,67 +127,52 @@
             </div>
 
             <% if (image.tags) { %>
-                <div class="detail-tags">
-                    <span class="detail-tags-label">Palabras clave</span>
-                    <div class="detail-tags-list">
-                        <% image.tags.split(',').forEach(tag=> { %>
-                            <a href="/buscar?q=<%= encodeURIComponent(tag.trim()) %>" class="tag-link">
-                                #<%= tag.trim() %>
-                            </a>
-                            <% }) %>
-                    </div>
+            <div class="detail-tags">
+                <span class="detail-tags-label">Palabras clave</span>
+                <div class="detail-tags-list">
+                    <% image.tags.split(',').forEach(tag=> { %>
+                        <a href="/buscar?q=<%= encodeURIComponent(tag.trim()) %>" class="tag-link">
+                            #<%= tag.trim() %>
+                        </a>
+                    <% }) %>
                 </div>
-                <% } %>
+            </div>
+            <% } %>
 
-                    <div class="ad-slot"
-                        style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
-                    </div>
+            <div class="ad-slot"
+                style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border-color: #FFE0E6; border-radius: var(--radius-lg);">
+                <!-- Ad Slot -->
+            </div>
         </div>
     </div>
+
     <div class="ad-slot"
-        style="margin: 3rem auto; max-width: 1200px; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
+        style="margin-top: 5rem; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
+        <!-- Ad Slot Inferior -->
     </div>
 
-
-
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org/",
-  "@type": "ImageObject",
-  "contentUrl": "https://pintacolores.com<%= image.cloudinary_url || '/assets/images/webp/' + image.category_slug + '/' + image.filename + '.webp' %>",
-  "creator": { "@type": "Organization", "name": "PintaColores" },
-  "name": "<%= image.title %>",
-  "license": "https://pintacolores.com/aviso-legal"
-}
-</script>
-
-
-
     <style>
-
-        /* El Layout de dos columnas en PC */
+        /* === DETAIL PAGE LAYOUT === */
         .detail-layout {
             display: flex;
             gap: 3.5rem;
             flex-wrap: wrap;
             margin-top: 3rem;
+            animation: fadeIn 0.8s ease-out;
             align-items: flex-start;
         }
-
-        /* Columna Imagen: Ocupa un poco más de espacio y es pegajosa */
         .detail-image-col {
-            flex: 1.2;
-            min-width: 300px;
+            flex: 1.1;
+            min-width: 280px;
             position: sticky;
-            top: 40px;
+            top: 100px;
         }
-
-        /* Columna Texto: Se adapta al espacio restante */
         .detail-info-col {
             flex: 1;
-            min-width: 300px;
+            min-width: 280px;
         }
 
+        /* === CATEGORY BADGE === */
         .detail-category-badge {
             text-decoration: none;
             background: #f0f7ff;
@@ -123,42 +183,67 @@
             font-size: 0.85rem;
             margin-bottom: 1.2rem;
             display: inline-block;
+            transition: var(--transition);
+        }
+        .detail-category-badge:hover {
+            background: var(--secondary);
+            color: white;
         }
 
+        /* === TITLE === */
         .detail-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 800;
-            margin-bottom: 1.5rem;
+            margin: 0.8rem 0 1.5rem;
             color: var(--text);
+            letter-spacing: -1px;
             line-height: 1.2;
         }
 
+        /* === DESCRIPTION (editorial style) === */
         .detail-description {
-            margin-bottom: 2rem;
+            margin: 0 0 2rem;
             padding-left: 1.25rem;
             border-left: 4px solid var(--primary, #f9a8d4);
         }
-
         .detail-description-title {
             font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1.5px;
             color: #aaa;
             margin-bottom: 1rem;
         }
-
         .detail-description-body {
             color: #444;
-            font-size: 1.1rem;
-            line-height: 1.7;
+            font-size: 1.05rem;
+            line-height: 1.85;
+        }
+        .detail-description-body p {
+            margin: 0 0 1rem;
+        }
+        .detail-description-body strong {
+            color: var(--text);
         }
 
+        /* === TAGS === */
+        .detail-tags {
+            margin-bottom: 2.5rem;
+        }
+        .detail-tags-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #bbb;
+            margin-bottom: 0.8rem;
+        }
         .detail-tags-list {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
         }
-
         .tag-link {
             text-decoration: none;
             background: #f8f8f8;
@@ -166,29 +251,29 @@
             border-radius: var(--pill);
             font-weight: 600;
             font-size: 0.85rem;
-            border: 1px solid #eee;
+            border: 1px solid var(--border);
             color: #666;
+            transition: var(--transition);
+        }
+        .tag-link:hover {
+            background: var(--primary, #f9a8d4);
+            color: white;
+            border-color: transparent;
         }
 
-        /* Ajustes para Móvil */
+        /* === RESPONSIVE === */
         @media (max-width: 900px) {
             .detail-layout {
                 flex-direction: column;
                 gap: 2rem;
             }
-
             .detail-image-col {
                 position: static;
-                width: 100%;
             }
-
             .detail-title {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
             }
         }
     </style>
-
-
-
 
     <%- include('../layout/footer') %>
