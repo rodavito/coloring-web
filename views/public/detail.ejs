@@ -23,8 +23,7 @@
                         Descargar JPG
                     </a>
 
-                    <button onclick="imprimirImagenSolo('<%= displaySrc %>')" class="btn btn-secondary"
-                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; background: #f0fdf4; color: #166534; border: 2px solid #bbf7d0;">
+                    <button onclick="imprimirImagenSolo('<%= displaySrc %>')" class="btn btn-secondary">
                         🖨️ Imprimir / Generar PDF
                     </button>
             </div>
@@ -81,28 +80,34 @@
 </script>
 
     <script>
-        function imprimirImagenSolo(url) {
-            const ventanaImpresion = window.open('', '_blank');
-            ventanaImpresion.document.write(`
-            <html>
-                <head>
-                    <title>PintaColores - Imprimir</title>
-                    <style>
-                        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: white; }
-                        img { max-width: 95%; max-height: 95%; object-fit: contain; }
-                        @page { size: auto; margin: 10mm; }
-                    </style>
-                </head>
-                <body onload="window.print(); window.close();">
-                    <img src="${url}">
-                </body>
-            </html>
-        `);
-            ventanaImpresion.document.close();
+        function imprimirImagenSolo(src) {
+            var w = window.open('', '_blank');
+            w.document.write(
+                '<!DOCTYPE html><html><head>'
+                + '<meta charset="utf-8">'
+                + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+                + '<title>Imprimir</title>'
+                + '<style>'
+                + '*{margin:0;padding:0;box-sizing:border-box;}'
+                + '@page{margin:8mm;}'
+                + 'html,body{width:100%;height:100%;background:#fff;}'
+                + 'body{display:flex;align-items:center;justify-content:center;}'
+                + 'img{max-width:100%;max-height:100vh;width:auto;height:auto;display:block;}'
+                + '@media print{'
+                + 'html,body{width:100%;height:100%;}'
+                + 'img{max-width:100%;max-height:100%;width:auto;height:auto;}'
+                + '}'
+                + '</style>'
+                + '</head><body>'
+                + '<img src="' + src + '" onload="window.print();" />'
+                + '</body></html>'
+            );
+            w.document.close();
         }
     </script>
 
     <style>
+
         /* El Layout de dos columnas en PC */
         .detail-layout {
             display: flex;
