@@ -247,3 +247,27 @@ exports.getAbout = async (req, res) => {
         res.status(500).send('Error en el servidor');
     }
 };
+
+exports.getPrintImage = async (req, res) => {
+    const { slug } = req.params;
+    try {
+        const result = await db.query(`
+            SELECT i.*, c.name as category_name, c.slug as category_slug
+            FROM images i 
+            LEFT JOIN categories c ON i.category_id = c.id 
+            WHERE i.slug = $1
+        `, [slug]);
+
+        if (result.rows.length === 0) return res.status(404).send('Imagen no encontrada');
+
+        const image = result.rows[0];
+
+        res.render('public/print', {
+            title: 'Imprimir ' + image.title,
+            image
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};

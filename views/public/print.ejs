@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+        }
+        .print-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+        @media print {
+            @page {
+                margin: 0;
+                size: auto;
+            }
+            body {
+                margin: 0;
+            }
+            .print-container {
+                padding: 0;
+                height: 100%;
+            }
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <% const displaySrc = image.cloudinary_url || `/assets/images/webp/${image.category_slug}/${image.filename}.webp`; %>
+        <img src="<%= displaySrc %>" id="coloring-image" alt="<%= image.title %>">
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Un pequeño delay para asegurar el renderizado
+            setTimeout(function() {
+                window.print();
+                
+                // Opción para cerrar la pestaña después de imprimir si es posible
+                // (No siempre funciona por restricciones de seguridad pero ayuda)
+                window.onafterprint = function() {
+                    window.close();
+                };
+            }, 500);
+        };
+    </script>
+</body>
+</html>

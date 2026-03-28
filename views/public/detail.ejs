@@ -23,14 +23,14 @@
                         Descargar JPG
                     </a>
 
-                    <button onclick="imprimirImagenSolo('<%= displaySrc %>')" class="btn btn-secondary"
-                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; border: none;">
+                    <a href="/imprimir/<%= image.slug %>" target="_blank" class="btn btn-secondary"
+                        style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; border: none; text-decoration: none;">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                             <path
                                 d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" />
                         </svg>
                         Imprimir / Generar PDF
-                    </button>
+                    </a>
             </div>
         </div>
         <div class="detail-info-col">
@@ -86,58 +86,7 @@
 }
 </script>
 
-    <script>
-        function imprimirImagenSolo(src) {
-            // Creamos un cursor de carga para que el usuario sepa que está pasando algo
-            document.body.style.cursor = 'wait';
 
-            // 1. Creamos un frame invisible
-            var iframe = document.createElement('iframe');
-            iframe.style.position = 'fixed';
-            iframe.style.right = '0';
-            iframe.style.bottom = '0';
-            iframe.style.width = '0';
-            iframe.style.height = '0';
-            iframe.style.border = '0';
-            document.body.appendChild(iframe);
-
-            // 2. Escribimos el contenido del frame (solo la imagen con estilos de centrado)
-            // Agregamos un timestamp para forzar que no use caché si es necesario, 
-            // pero lo más importante es el layout limpio.
-            var doc = iframe.contentWindow.document;
-            doc.write('<html><head><title>PintaColores - Imprimir</title>');
-            doc.write('<style>');
-            doc.write('body { margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #fff; }');
-            doc.write('img { max-width: 95%; max-height: 95%; width: auto; height: auto; object-fit: contain; }');
-            doc.write('@page { margin: 5mm; size: auto; }');
-            doc.write('</style></head><body>');
-            doc.write('<img src="' + src + '" id="print-image">');
-            doc.write('</body></html>');
-            doc.close();
-
-            // 3. Esperamos a que la imagen dentro del frame cargue
-            var img = doc.getElementById('print-image');
-            img.onload = function() {
-                document.body.style.cursor = 'default';
-                
-                // Disparamos la impresión desde el contexto del frame
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-                
-                // Limpieza: eliminamos el frame tras un tiempo prudencial
-                // En iOS a veces el diálogo de impresión es asíncrono y necesitamos el frame vivo un momento.
-                setTimeout(function() {
-                    document.body.removeChild(iframe);
-                }, 1000);
-            };
-
-            img.onerror = function() {
-                document.body.style.cursor = 'default';
-                alert('No pudimos cargar la imagen para imprimir. Por favor descarga el JPG.');
-                document.body.removeChild(iframe);
-            };
-        }
-    </script>
 
     <style>
 

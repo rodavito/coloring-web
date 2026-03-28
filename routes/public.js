@@ -5,6 +5,7 @@ const publicController = require('../controllers/publicController');
 router.get('/', publicController.getCommon);
 router.get('/categoria/:slug', publicController.getCategory);
 router.get('/dibujo/:slug', publicController.getImage);
+router.get('/imprimir/:slug', publicController.getPrintImage);
 router.get('/search', publicController.searchByTags);
 router.get('/sitemap.xml', publicController.getSitemap);
 router.get('/privacidad', publicController.getPrivacy);
