@@ -73,6 +73,8 @@
         style="margin: 3rem auto; max-width: 1200px; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
     </div>
 
+
+
     <script type="application/ld+json">
 {
   "@context": "https://schema.org/",
@@ -84,82 +86,60 @@
 }
 </script>
 
-    <!-- Overlay de impresión: solo visible al imprimir -->
-    <div id="print-overlay">
-        <img id="print-overlay-img" src="" alt="Imprimir" crossorigin="anonymous">
-    </div>
-
     <script>
         function imprimirImagenSolo(src) {
-            var img = document.getElementById('print-overlay-img');
+            // Creamos un cursor de carga para que el usuario sepa que está pasando algo
+            document.body.style.cursor = 'wait';
 
-            document.body.classList.add('printing');
-            img.src = src;
+            // 1. Creamos un frame invisible
+            var iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            document.body.appendChild(iframe);
 
-            // 🔥 IMPORTANTE: fallback SI onload no dispara
-            setTimeout(function () {
-                window.print();
-            }, 500);
+            // 2. Escribimos el contenido del frame (solo la imagen con estilos de centrado)
+            // Agregamos un timestamp para forzar que no use caché si es necesario, 
+            // pero lo más importante es el layout limpio.
+            var doc = iframe.contentWindow.document;
+            doc.write('<html><head><title>PintaColores - Imprimir</title>');
+            doc.write('<style>');
+            doc.write('body { margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #fff; }');
+            doc.write('img { max-width: 95%; max-height: 95%; width: auto; height: auto; object-fit: contain; }');
+            doc.write('@page { margin: 5mm; size: auto; }');
+            doc.write('</style></head><body>');
+            doc.write('<img src="' + src + '" id="print-image">');
+            doc.write('</body></html>');
+            doc.close();
 
-            var cleanup = function () {
-                document.body.classList.remove('printing');
-                img.src = '';
-                window.removeEventListener('focus', cleanup);
+            // 3. Esperamos a que la imagen dentro del frame cargue
+            var img = doc.getElementById('print-image');
+            img.onload = function() {
+                document.body.style.cursor = 'default';
+                
+                // Disparamos la impresión desde el contexto del frame
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                
+                // Limpieza: eliminamos el frame tras un tiempo prudencial
+                // En iOS a veces el diálogo de impresión es asíncrono y necesitamos el frame vivo un momento.
+                setTimeout(function() {
+                    document.body.removeChild(iframe);
+                }, 1000);
             };
 
-            window.addEventListener('afterprint', cleanup, { once: true });
-            window.addEventListener('focus', cleanup, { once: true });
+            img.onerror = function() {
+                document.body.style.cursor = 'default';
+                alert('No pudimos cargar la imagen para imprimir. Por favor descarga el JPG.');
+                document.body.removeChild(iframe);
+            };
         }
     </script>
 
     <style>
-        /* ===== OVERLAY DE IMPRESIÓN ===== */
-        #print-overlay {
-            display: none;
-            background: white;
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            /* Oculto detrás del todo normalmente */
-        }
-
-        @media print {
-            @page {
-                margin: 0;
-            }
-
-            /* Ocultamos absolutamente todo lo que no sea el overlay */
-            body * {
-                visibility: hidden;
-            }
-
-            #print-overlay,
-            #print-overlay * {
-                visibility: visible;
-            }
-
-            #print-overlay {
-                display: flex !important;
-                z-index: 99999 !important;
-                position: fixed;
-                inset: 0;
-                width: 100vw;
-                height: 100vh;
-                align-items: center;
-                justify-content: center;
-            }
-
-            #print-overlay img {
-                max-width: 100%;
-                max-height: 100%;
-                width: auto;
-                height: auto;
-                object-fit: contain;
-                page-break-inside: avoid;
-                margin: auto;
-            }
-        }
-
 
         /* El Layout de dos columnas en PC */
         .detail-layout {
@@ -258,5 +238,8 @@
             }
         }
     </style>
+
+
+
 
     <%- include('../layout/footer') %>
