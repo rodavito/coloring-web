@@ -48,92 +48,67 @@
             <style>
                 @media print {
 
-                    /* 1. LIMPIEZA TOTAL */
-                    #cookie-banner,
-                    .floating-decor,
-                    .decor-item,
-                    header,
-                    footer,
-                    nav,
-                    .ad-slot,
-                    button,
-                    .btn,
-                    [style*="flex: 0.8"],
-                    h1,
-                    h3,
-                    p,
-                    .tag-link {
+                    /* 1. RESET RADICAL */
+                    /* Ocultamos absolutamente todo por defecto */
+                    body * {
                         display: none !important;
                     }
 
-                    /* 2. RESET PARA EVITAR 2DA PÁGINA */
+                    /* 2. REVELAR SOLO EL CONTENEDOR DE LA IMAGEN */
+                    /* Hacemos que el body y los ancestros del área imprimible sean visibles pero sin ocupar espacio */
                     html,
                     body {
+                        display: block !important;
                         margin: 0 !important;
                         padding: 0 !important;
                         height: 100% !important;
                         width: 100% !important;
-                        overflow: hidden !important;
-                        /* Clave para matar la 2da página */
                         background: white !important;
-                        font-size: 0 !important;
-                        line-height: 0 !important;
+                        overflow: hidden !important;
                     }
 
-                    /* 3. CONTENEDOR (Configuración para PC) */
-                    .printable-area {
-                        display: block !important;
-                        position: relative !important;
-                        width: 100% !important;
-                        height: 100% !important;
-                        margin: 0 !important;
-                        padding: 0.5cm 0.5cm 2cm 0.5cm !important;
-                        box-sizing: border-box !important;
-                        text-align: center !important;
-                        page-break-after: avoid !important;
-                    }
-
-                    /* 4. IMAGEN (Configuración para PC) */
+                    /* Mostramos solo el área que queremos imprimir */
+                    .detail-layout,
+                    .detail-image-col,
+                    .printable-area,
                     .printable-area img {
-                        display: inline-block !important;
-                        vertical-align: middle !important;
-                        max-width: 95% !important;
-                        max-height: 82vh !important;
-                        /* Bajamos a 82 para asegurar espacio del logo */
+                        display: block !important;
+                    }
+
+                    /* 3. POSICIONAMIENTO ABSOLUTO PARA LLENAR LA HOJA */
+                    .printable-area {
+                        position: fixed !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        width: 100vw !important;
+                        height: 100vh !important;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                        border: none !important;
+                        box-shadow: none !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        z-index: 9999;
+                    }
+
+                    .printable-area img {
+                        /* Forzamos a que la imagen crezca hasta los límites de la hoja */
                         width: auto !important;
                         height: auto !important;
+                        max-width: 95% !important;
+                        /* Margen de seguridad */
+                        max-height: 95% !important;
+                        margin: auto !important;
                         filter: none !important;
                         box-shadow: none !important;
                     }
 
-                    /* 5. PARCHE ESPECÍFICO PARA CELULARES (DENTRO DEL PRINT) */
-                    @media (max-width: 768px) {
-
-                        html,
-                        body {
-                            overflow: visible !important;
-                            /* Safari iPhone necesita esto */
-                        }
-
-                        .printable-area {
-                            position: relative !important;
-                            height: auto !important;
-                            min-height: 98vh !important;
-                            padding: 0.5cm 0.5cm 3cm 0.5cm !important;
-                            /* Espacio extra logo móvil */
-                        }
-
-                        .printable-area img {
-                            max-height: 70vh !important;
-                            /* Lo bajamos más en móvil para evitar la 2da hoja */
-                            max-width: 90% !important;
-                        }
-                    }
-
-                    /* 6. ELIMINAR LINKS Y MÁRGENES TÉCNICOS */
+                    /* 4. AJUSTE DE PÁGINA */
                     @page {
                         size: auto;
-                        margin: 0mm !important;
+                        margin: 5mm !important;
+                        /* Margen mínimo de impresora */
                     }
                 }
             </style>
@@ -161,22 +136,22 @@
             </div>
 
             <% if (image.tags) { %>
-            <div class="detail-tags">
-                <span class="detail-tags-label">Palabras clave</span>
-                <div class="detail-tags-list">
-                    <% image.tags.split(',').forEach(tag=> { %>
-                        <a href="/buscar?q=<%= encodeURIComponent(tag.trim()) %>" class="tag-link">
-                            #<%= tag.trim() %>
-                        </a>
-                    <% }) %>
+                <div class="detail-tags">
+                    <span class="detail-tags-label">Palabras clave</span>
+                    <div class="detail-tags-list">
+                        <% image.tags.split(',').forEach(tag=> { %>
+                            <a href="/buscar?q=<%= encodeURIComponent(tag.trim()) %>" class="tag-link">
+                                #<%= tag.trim() %>
+                            </a>
+                            <% }) %>
+                    </div>
                 </div>
-            </div>
-            <% } %>
+                <% } %>
 
-            <div class="ad-slot"
-                style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border-color: #FFE0E6; border-radius: var(--radius-lg);">
-                <!-- Ad Slot -->
-            </div>
+                    <div class="ad-slot"
+                        style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border-color: #FFE0E6; border-radius: var(--radius-lg);">
+                        <!-- Ad Slot -->
+                    </div>
         </div>
     </div>
 
@@ -195,12 +170,14 @@
             animation: fadeIn 0.8s ease-out;
             align-items: flex-start;
         }
+
         .detail-image-col {
             flex: 1.1;
             min-width: 280px;
             position: sticky;
             top: 100px;
         }
+
         .detail-info-col {
             flex: 1;
             min-width: 280px;
@@ -219,6 +196,7 @@
             display: inline-block;
             transition: var(--transition);
         }
+
         .detail-category-badge:hover {
             background: var(--secondary);
             color: white;
@@ -240,6 +218,7 @@
             padding-left: 1.25rem;
             border-left: 4px solid var(--primary, #f9a8d4);
         }
+
         .detail-description-title {
             font-size: 0.8rem;
             font-weight: 700;
@@ -248,14 +227,17 @@
             color: #aaa;
             margin-bottom: 1rem;
         }
+
         .detail-description-body {
             color: #444;
             font-size: 1.05rem;
             line-height: 1.85;
         }
+
         .detail-description-body p {
             margin: 0 0 1rem;
         }
+
         .detail-description-body strong {
             color: var(--text);
         }
@@ -264,6 +246,7 @@
         .detail-tags {
             margin-bottom: 2.5rem;
         }
+
         .detail-tags-label {
             display: block;
             font-size: 0.75rem;
@@ -273,11 +256,13 @@
             color: #bbb;
             margin-bottom: 0.8rem;
         }
+
         .detail-tags-list {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
         }
+
         .tag-link {
             text-decoration: none;
             background: #f8f8f8;
@@ -289,6 +274,7 @@
             color: #666;
             transition: var(--transition);
         }
+
         .tag-link:hover {
             background: var(--primary, #f9a8d4);
             color: white;
@@ -301,9 +287,11 @@
                 flex-direction: column;
                 gap: 2rem;
             }
+
             .detail-image-col {
                 position: static;
             }
+
             .detail-title {
                 font-size: 1.6rem;
             }
