@@ -1,6 +1,7 @@
 <%- include('../layout/header') %>
 
     <div class="detail-layout">
+
         <div class="detail-image-col">
             <div class="printable-area"
                 style="background: white; padding: 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 4px solid white;">
@@ -10,27 +11,10 @@
                         style="width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.03));">
             </div>
 
-            <script type="application/ld+json">
-            {
-              "@context": "https://schema.org/",
-              "@type": "ImageObject",
-              "contentUrl": "<%= displaySrc.startsWith('http') ? displaySrc : 'https://pintacolores.com' + displaySrc %>",
-              "creator": {
-                "@type": "Organization",
-                "name": "PintaColores"
-              },
-              "creditText": "PintaColores",
-              "copyrightNotice": "© PintaColores",
-              "description": "<%= (image.description || 'Dibujo para colorear gratuito de ' + image.title).replace(/\"/g, '&quot;') %>",
-              "name": "<%= image.title.replace(/\"/g, '&quot;') %>",
-              "license": "https://pintacolores.com/aviso-legal",
-              "acquireLicensePage": "https://pintacolores.com/aviso-legal"
-            }
-            </script>
-
             <div style="margin-top: 2rem; display: flex; gap: 1.5rem; flex-direction: column;">
                 <% const downloadSrc=image.cloudinary_url ? image.cloudinary_url.replace(/\.webp$/, '.jpg' ) :
                     `/assets/images/jpg/${image.category_slug}/${image.filename}.jpg`; %>
+
                     <a href="<%= downloadSrc %>" download="<%= image.slug %>.jpg" class="btn btn-primary"
                         style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px;">
                         <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" fill="white">
@@ -39,89 +23,17 @@
                         Descargar JPG
                     </a>
 
-                    <button onclick="window.print()" class="btn btn-secondary"
+                    <button onclick="imprimirImagenSolo('<%= displaySrc %>')" class="btn btn-secondary"
                         style="width: 100%; padding: 1.5rem; font-size: 1.2rem; border-radius: var(--pill); display: flex; align-items: center; justify-content: center; gap: 10px; background: #f0fdf4; color: #166534; border: 2px solid #bbf7d0;">
                         🖨️ Imprimir / Generar PDF
                     </button>
             </div>
-
-            <style>
-                @media print {
-
-                    /* 1. RESET RADICAL */
-                    /* Ocultamos absolutamente todo por defecto */
-                    body * {
-                        display: none !important;
-                    }
-
-                    /* 2. REVELAR SOLO EL CONTENEDOR DE LA IMAGEN */
-                    /* Hacemos que el body y los ancestros del área imprimible sean visibles pero sin ocupar espacio */
-                    html,
-                    body {
-                        display: block !important;
-                        margin: 0 !important;
-                        padding: 0 !important;
-                        height: 100% !important;
-                        width: 100% !important;
-                        background: white !important;
-                        overflow: hidden !important;
-                    }
-
-                    /* Mostramos solo el área que queremos imprimir */
-                    .detail-layout,
-                    .detail-image-col,
-                    .printable-area,
-                    .printable-area img {
-                        display: block !important;
-                    }
-
-                    /* 3. POSICIONAMIENTO ABSOLUTO PARA LLENAR LA HOJA */
-                    .printable-area {
-                        position: fixed !important;
-                        top: 0 !important;
-                        left: 0 !important;
-                        width: 100vw !important;
-                        height: 100vh !important;
-                        padding: 0 !important;
-                        margin: 0 !important;
-                        border: none !important;
-                        box-shadow: none !important;
-                        display: flex !important;
-                        align-items: center !important;
-                        justify-content: center !important;
-                        z-index: 9999;
-                    }
-
-                    .printable-area img {
-                        /* Forzamos a que la imagen crezca hasta los límites de la hoja */
-                        width: auto !important;
-                        height: auto !important;
-                        max-width: 95% !important;
-                        /* Margen de seguridad */
-                        max-height: 95% !important;
-                        margin: auto !important;
-                        filter: none !important;
-                        box-shadow: none !important;
-                    }
-
-                    /* 4. AJUSTE DE PÁGINA */
-                    @page {
-                        size: auto;
-                        margin: 5mm !important;
-                        /* Margen mínimo de impresora */
-                    }
-                }
-            </style>
         </div>
-        <script>
-            function imprimir() {
-                window.print();
-            }
-        </script>
         <div class="detail-info-col">
             <a href="/categoria/<%= image.category_slug %>" class="detail-category-badge">
                 <%= image.category_name %>
             </a>
+
             <h1 class="detail-title">
                 <%= image.title %>
             </h1>
@@ -149,41 +61,71 @@
                 <% } %>
 
                     <div class="ad-slot"
-                        style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border-color: #FFE0E6; border-radius: var(--radius-lg);">
-                        <!-- Ad Slot -->
+                        style="height: 300px; display: flex; align-items: center; justify-content: center; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
                     </div>
         </div>
     </div>
-
     <div class="ad-slot"
-        style="margin-top: 5rem; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
-        <!-- Ad Slot Inferior -->
+        style="margin: 3rem auto; max-width: 1200px; height: 150px; background: #FFF9FA; border: 1px dashed #FFE0E6; border-radius: var(--radius-lg);">
     </div>
 
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "ImageObject",
+  "contentUrl": "https://pintacolores.com<%= image.cloudinary_url || '/assets/images/webp/' + image.category_slug + '/' + image.filename + '.webp' %>",
+  "creator": { "@type": "Organization", "name": "PintaColores" },
+  "name": "<%= image.title %>",
+  "license": "https://pintacolores.com/aviso-legal"
+}
+</script>
+
+    <script>
+        function imprimirImagenSolo(url) {
+            const ventanaImpresion = window.open('', '_blank');
+            ventanaImpresion.document.write(`
+            <html>
+                <head>
+                    <title>PintaColores - Imprimir</title>
+                    <style>
+                        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: white; }
+                        img { max-width: 95%; max-height: 95%; object-fit: contain; }
+                        @page { size: auto; margin: 10mm; }
+                    </style>
+                </head>
+                <body onload="window.print(); window.close();">
+                    <img src="${url}">
+                </body>
+            </html>
+        `);
+            ventanaImpresion.document.close();
+        }
+    </script>
+
     <style>
-        /* === DETAIL PAGE LAYOUT === */
+        /* El Layout de dos columnas en PC */
         .detail-layout {
             display: flex;
             gap: 3.5rem;
             flex-wrap: wrap;
             margin-top: 3rem;
-            animation: fadeIn 0.8s ease-out;
             align-items: flex-start;
         }
 
+        /* Columna Imagen: Ocupa un poco más de espacio y es pegajosa */
         .detail-image-col {
-            flex: 1.1;
-            min-width: 280px;
+            flex: 1.2;
+            min-width: 300px;
             position: sticky;
-            top: 100px;
+            top: 40px;
         }
 
+        /* Columna Texto: Se adapta al espacio restante */
         .detail-info-col {
             flex: 1;
-            min-width: 280px;
+            min-width: 300px;
         }
 
-        /* === CATEGORY BADGE === */
         .detail-category-badge {
             text-decoration: none;
             background: #f0f7ff;
@@ -194,27 +136,18 @@
             font-size: 0.85rem;
             margin-bottom: 1.2rem;
             display: inline-block;
-            transition: var(--transition);
         }
 
-        .detail-category-badge:hover {
-            background: var(--secondary);
-            color: white;
-        }
-
-        /* === TITLE === */
         .detail-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
-            margin: 0.8rem 0 1.5rem;
+            margin-bottom: 1.5rem;
             color: var(--text);
-            letter-spacing: -1px;
             line-height: 1.2;
         }
 
-        /* === DESCRIPTION (editorial style) === */
         .detail-description {
-            margin: 0 0 2rem;
+            margin-bottom: 2rem;
             padding-left: 1.25rem;
             border-left: 4px solid var(--primary, #f9a8d4);
         }
@@ -223,38 +156,14 @@
             font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
             color: #aaa;
             margin-bottom: 1rem;
         }
 
         .detail-description-body {
             color: #444;
-            font-size: 1.05rem;
-            line-height: 1.85;
-        }
-
-        .detail-description-body p {
-            margin: 0 0 1rem;
-        }
-
-        .detail-description-body strong {
-            color: var(--text);
-        }
-
-        /* === TAGS === */
-        .detail-tags {
-            margin-bottom: 2.5rem;
-        }
-
-        .detail-tags-label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #bbb;
-            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
         }
 
         .detail-tags-list {
@@ -270,18 +179,11 @@
             border-radius: var(--pill);
             font-weight: 600;
             font-size: 0.85rem;
-            border: 1px solid var(--border);
+            border: 1px solid #eee;
             color: #666;
-            transition: var(--transition);
         }
 
-        .tag-link:hover {
-            background: var(--primary, #f9a8d4);
-            color: white;
-            border-color: transparent;
-        }
-
-        /* === RESPONSIVE === */
+        /* Ajustes para Móvil */
         @media (max-width: 900px) {
             .detail-layout {
                 flex-direction: column;
@@ -290,10 +192,11 @@
 
             .detail-image-col {
                 position: static;
+                width: 100%;
             }
 
             .detail-title {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
         }
     </style>
