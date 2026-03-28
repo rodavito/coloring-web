@@ -92,28 +92,27 @@
         function imprimirImagenSolo(src) {
             var img = document.getElementById('print-overlay-img');
             
-            // Primero preparamos la imagen
-            img.onload = function() {
-                document.body.classList.add('printing');
-                
-                // Pequeño delay opcional para que el navegador "chupe" bien la imagen al layout
-                setTimeout(function() {
-                    window.print();
-                }, 100);
-            };
-            
+            // Aseguramos que el body tenga la clase antes de disparar nada
+            document.body.classList.add('printing');
             img.src = src;
 
-            // Escuchamos cuando se cierra el diálogo de impresión (imprima o cancele)
-            // Fallback: si por alguna razón afterprint no se dispara
-            // Limpiamos al volver a enfocar la ventana
-            window.addEventListener('focus', function onFocus() {
-                if (document.body.classList.contains('printing')) {
-                    document.body.classList.remove('printing');
-                    img.src = '';
-                }
-                window.removeEventListener('focus', onFocus);
-            }, { once: true });
+            img.onload = function() {
+                // Pequeño delay para que móviles procesen el layout del overlay
+                setTimeout(function() {
+                    window.print();
+                }, 250);
+            };
+
+            // Cleanup al volver del diálogo (sea imprimir o cancelar)
+            var cleanup = function() {
+                document.body.classList.remove('printing');
+                img.src = '';
+                window.removeEventListener('focus', cleanup);
+            };
+            
+            // Escuchamos ambos eventos para máxima compatibilidad
+            window.addEventListener('afterprint', cleanup, { once: true });
+            window.addEventListener('focus', cleanup, { once: true });
         }
     </script>
 
@@ -121,34 +120,39 @@
         /* ===== OVERLAY DE IMPRESIÓN ===== */
         #print-overlay {
             display: none;
+            background: white;
+            position: fixed;
+            inset: 0;
+            z-index: -1; /* Oculto detrás del todo normalmente */
         }
 
-        /* Al imprimir: ocultar todo y mostrar solo la imagen */
         @media print {
-            @page { margin: 8mm; }
-
-            body.printing > *:not(#print-overlay) {
+            @page { margin: 0; }
+            
+            /* Ocultamos absolutamente todo lo que no sea el overlay */
+            body > *:not(#print-overlay) {
                 display: none !important;
             }
 
-            body.printing #print-overlay {
+            #print-overlay {
                 display: flex !important;
+                z-index: 99999 !important;
                 position: fixed;
                 inset: 0;
-                width: 100%;
-                height: 100%;
-                background: white;
+                width: 100vw;
+                height: 100vh;
                 align-items: center;
                 justify-content: center;
-                z-index: 99999;
             }
 
-            body.printing #print-overlay img {
+            #print-overlay img {
                 max-width: 100%;
                 max-height: 100%;
                 width: auto;
                 height: auto;
                 object-fit: contain;
+                page-break-inside: avoid;
+                margin: auto;
             }
         }
 
