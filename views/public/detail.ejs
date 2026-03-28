@@ -83,34 +83,75 @@
 }
 </script>
 
+    <!-- Overlay de impresión: solo visible al imprimir -->
+    <div id="print-overlay">
+        <img id="print-overlay-img" src="" alt="Imprimir">
+    </div>
+
     <script>
         function imprimirImagenSolo(src) {
-            var w = window.open('', '_blank');
-            w.document.write(
-                '<!DOCTYPE html><html><head>'
-                + '<meta charset="utf-8">'
-                + '<meta name="viewport" content="width=device-width,initial-scale=1">'
-                + '<title>Imprimir</title>'
-                + '<style>'
-                + '*{margin:0;padding:0;box-sizing:border-box;}'
-                + '@page{margin:8mm;}'
-                + 'html,body{width:100%;height:100%;background:#fff;}'
-                + 'body{display:flex;align-items:center;justify-content:center;}'
-                + 'img{max-width:100%;max-height:100vh;width:auto;height:auto;display:block;}'
-                + '@media print{'
-                + 'html,body{width:100%;height:100%;}'
-                + 'img{max-width:100%;max-height:100%;width:auto;height:auto;}'
-                + '}'
-                + '</style>'
-                + '</head><body>'
-                + '<img src="' + src + '" onload="window.print();window.close();" />'
-                + '</body></html>'
-            );
-            w.document.close();
+            var img = document.getElementById('print-overlay-img');
+            
+            // Primero preparamos la imagen
+            img.onload = function() {
+                document.body.classList.add('printing');
+                
+                // Pequeño delay opcional para que el navegador "chupe" bien la imagen al layout
+                setTimeout(function() {
+                    window.print();
+                }, 100);
+            };
+            
+            img.src = src;
+
+            // Escuchamos cuando se cierra el diálogo de impresión (imprima o cancele)
+            // Fallback: si por alguna razón afterprint no se dispara
+            // Limpiamos al volver a enfocar la ventana
+            window.addEventListener('focus', function onFocus() {
+                if (document.body.classList.contains('printing')) {
+                    document.body.classList.remove('printing');
+                    img.src = '';
+                }
+                window.removeEventListener('focus', onFocus);
+            }, { once: true });
         }
     </script>
 
     <style>
+        /* ===== OVERLAY DE IMPRESIÓN ===== */
+        #print-overlay {
+            display: none;
+        }
+
+        /* Al imprimir: ocultar todo y mostrar solo la imagen */
+        @media print {
+            @page { margin: 8mm; }
+
+            body.printing > *:not(#print-overlay) {
+                display: none !important;
+            }
+
+            body.printing #print-overlay {
+                display: flex !important;
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                background: white;
+                align-items: center;
+                justify-content: center;
+                z-index: 99999;
+            }
+
+            body.printing #print-overlay img {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+
 
         /* El Layout de dos columnas en PC */
         .detail-layout {
