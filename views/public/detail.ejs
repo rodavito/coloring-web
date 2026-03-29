@@ -56,7 +56,11 @@
                     /* 2. Configuración de página y body */
                     @page {
                         size: auto;
-                        margin: 10mm !important; /* Margen físico real */
+                        margin: 5mm !important; /* Margen físico más pequeño */
+                    }
+
+                    *, *::before, *::after {
+                        box-sizing: border-box !important;
                     }
 
                     html, body {
@@ -64,16 +68,12 @@
                         padding: 0 !important;
                         height: auto !important;
                         background: white !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
                     }
 
-                    /* 3. Contenedor de la imagen */
-                    .detail-layout {
-                        display: block !important;
-                        margin: 0 !important;
-                        padding: 0 !important;
-                    }
-
-                    .detail-image-col {
+                    /* 3. Contenedores */
+                    .detail-layout, .detail-image-col {
                         display: block !important;
                         width: 100% !important;
                         margin: 0 !important;
@@ -91,14 +91,15 @@
                         text-align: center !important;
                     }
 
-                    /* 4. Imagen: El corazón del ajuste */
+                    /* 4. Imagen: Ajuste preciso para evitar cortes */
                     .printable-area img {
                         display: block !important;
                         margin: 0 auto !important;
                         max-width: 100% !important;
-                        max-height: 95vh !important; /* Casi toda la página, pero con margen */
+                        max-height: 90vh !important; /* Más conservador para móviles */
                         width: auto !important;
                         height: auto !important;
+                        object-fit: contain !important;
                         page-break-inside: avoid !important;
                         filter: none !important;
                     }
