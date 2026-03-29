@@ -15,16 +15,17 @@
               "@context": "https://schema.org/",
               "@type": "ImageObject",
               "contentUrl": "<%= displaySrc.startsWith('http') ? displaySrc : 'https://pintacolores.com' + displaySrc %>",
+              "url": "https://pintacolores.com/dibujo/<%= image.slug %>",
               "creator": {
                 "@type": "Organization",
                 "name": "PintaColores"
               },
               "creditText": "PintaColores",
               "copyrightNotice": "© PintaColores",
-              "description": "<%= (image.description || 'Dibujo para colorear gratuito de ' + image.title).replace(/\"/g, '&quot;') %>",
-              "name": "<%= image.title.replace(/\"/g, '&quot;') %>",
               "license": "https://pintacolores.com/aviso-legal",
-              "acquireLicensePage": "https://pintacolores.com/aviso-legal"
+              "acquireLicensePage": "https://pintacolores.com/aviso-legal",
+              "description": "<%= (image.description || 'Dibujo para colorear gratuito de ' + image.title).replace(/\"/g, '&quot;') %>",
+              "name": "<%= image.title.replace(/\"/g, '&quot;') %>"
             }
             </script>
 

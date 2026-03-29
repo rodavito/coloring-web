@@ -22,6 +22,25 @@
                                 `/assets/images/webp/${img.category_slug}/${img.filename}.webp`; %>
                                 <img src="<%= displaySrc %>" alt="<%= img.alt_text %>" loading="lazy">
                         </a>
+
+                        <script type="application/ld+json">
+                        {
+                          "@context": "https://schema.org/",
+                          "@type": "ImageObject",
+                          "contentUrl": "<%= displaySrc.startsWith('http') ? displaySrc : 'https://pintacolores.com' + displaySrc %>",
+                          "url": "https://pintacolores.com/dibujo/<%= img.slug %>",
+                          "creator": {
+                            "@type": "Organization",
+                            "name": "PintaColores"
+                          },
+                          "creditText": "PintaColores",
+                          "copyrightNotice": "© PintaColores",
+                          "license": "https://pintacolores.com/aviso-legal",
+                          "acquireLicensePage": "https://pintacolores.com/aviso-legal",
+                          "name": "<%= img.title.replace(/\"/g, '&quot;') %>"
+                        }
+                        </script>
+
                         <div class="card-info">
                             <div class="card-header">
                                 <h3 class="card-title">
