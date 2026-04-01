@@ -1142,3 +1142,126 @@ section {
     grid-template-columns: 1fr;
   }
 }
+
+/* Legal & Informational Pages Styles */
+.legal-container {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 3.5rem;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: fadeIn 0.8s ease-out;
+}
+
+.legal-container h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 2.5rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.legal-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: var(--pill);
+}
+
+.legal-container h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin: 2.5rem 0 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.legal-container h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 1.8rem 0 1rem;
+}
+
+.legal-container p {
+  font-size: 1.05rem;
+  color: var(--text-light);
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+}
+
+.legal-container ul {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.legal-container li {
+  font-size: 1.05rem;
+  color: var(--text-light);
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+
+.legal-container strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.legal-contact-box {
+  margin-top: 3.5rem;
+  padding: 2.5rem;
+  background: var(--accent);
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 1px dashed var(--primary);
+}
+
+.legal-contact-box h3 {
+  margin-top: 0;
+  color: var(--secondary);
+}
+
+.legal-contact-box p {
+  margin-bottom: 0;
+}
+
+.legal-email {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.legal-email:hover {
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .legal-container {
+    margin: 2rem 1rem;
+    padding: 2rem;
+  }
+  
+  .legal-container h1 {
+    font-size: 2rem;
+  }
+  
+  .legal-container h2 {
+    font-size: 1.4rem;
+  }
+}
