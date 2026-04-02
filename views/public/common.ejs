@@ -105,7 +105,7 @@
         <style>
             .category-info-trigger {
                 max-width: 1200px;
-                margin: 2rem auto 0;
+                margin: 0.5rem auto 2rem;
                 padding: 0 1.5rem;
                 text-align: center;
                 animation: fadeIn 1s ease-out;
@@ -114,29 +114,34 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 0.8rem;
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(10px);
-                padding: 0.8rem 2rem;
+                background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+                padding: 0.7rem 2.2rem;
                 border-radius: 50px;
-                border: 1px solid rgba(0,0,0,0.05);
-                color: #4a5568;
-                font-size: 1rem;
-                font-weight: 600;
+                border: 2px solid var(--primary, #a9e3f6);
+                color: #2d3748;
+                font-size: 1.05rem;
+                font-weight: 700;
                 cursor: pointer;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 10px 20px rgba(169, 227, 246, 0.2);
                 text-decoration: none;
             }
             .seo-trigger-btn:hover {
-                transform: translateY(-3px);
+                transform: translateY(-4px) scale(1.02);
                 background: white;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-                color: var(--secondary, #ff6b6b);
+                box-shadow: 0 15px 30px rgba(169, 227, 246, 0.4);
+                border-color: var(--secondary, #4a90e2);
+                color: var(--secondary, #4a90e2);
             }
             .seo-trigger-btn svg {
-                width: 20px;
-                height: 20px;
-                fill: currentColor;
+                width: 22px;
+                height: 22px;
+                fill: var(--primary, #a9e3f6);
+                transition: fill 0.3s ease;
+            }
+            .seo-trigger-btn:hover svg {
+                fill: var(--secondary, #4a90e2);
+                transform: rotate(15deg);
             }
 
             /* Estilos del Modal */
@@ -144,10 +149,13 @@
                 position: fixed;
                 top: 0;
                 left: 0;
+                right: 0;
+                bottom: 0;
                 width: 100%;
-                height: 100%;
+                height: 100vh;
+                height: 100dvh;
                 background: rgba(0, 0, 0, 0.4);
-                backdrop-filter: blur(8px);
+                backdrop-filter: blur(12px);
                 z-index: 9999;
                 display: flex;
                 align-items: center;
