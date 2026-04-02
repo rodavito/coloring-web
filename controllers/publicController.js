@@ -69,6 +69,7 @@ exports.getCategory = async (req, res) => {
             activeCategory: category.id,
             categoryIntro: category.intro_text,
             categorySeo: category.seo_text || null,
+            categorySeoTitle: category.seo_title || null,
             currentPage: page,
             hasMore,
             baseUrl: `/categoria/${slug}`

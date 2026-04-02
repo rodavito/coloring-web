@@ -9,6 +9,17 @@
         </div>
     </div>
 
+    <% if (locals.categorySeoTitle && locals.categorySeo) { %>
+        <div class="category-info-trigger">
+            <button onclick="openSeoModal()" class="seo-trigger-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+                <span><%= categorySeoTitle %></span>
+            </button>
+        </div>
+    <% } %>
+
     <div class="grid">
         <% if (images.length===0) { %>
             <p style="text-align: center; grid-column: 1/-1; padding: 5rem; color: #999;">No se encontraron dibujos.
@@ -77,45 +88,178 @@
         </div>
         <% } %>
 
-    <% if (locals.categorySeo) { %>
-        <section class="category-seo">
-            <%- locals.categorySeo %>
-        </section>
+    <% if (locals.categorySeo && locals.categorySeoTitle) { %>
+        <!-- Modal para SEO -->
+        <div id="seoModal" class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeSeoModal()">&times;</button>
+                <div class="modal-inner">
+                    <h2 class="modal-title"><%= categorySeoTitle %></h2>
+                    <div class="modal-body">
+                        <%- locals.categorySeo %>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <style>
-            .category-seo {
-                max-width: 800px;
-                margin: 4rem auto;
+            .category-info-trigger {
+                max-width: 1200px;
+                margin: 2rem auto 0;
                 padding: 0 1.5rem;
                 text-align: center;
+                animation: fadeIn 1s ease-out;
             }
-            .category-seo h2 {
+            .seo-trigger-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.8rem;
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                padding: 0.8rem 2rem;
+                border-radius: 50px;
+                border: 1px solid rgba(0,0,0,0.05);
+                color: #4a5568;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                text-decoration: none;
+            }
+            .seo-trigger-btn:hover {
+                transform: translateY(-3px);
+                background: white;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                color: var(--secondary, #ff6b6b);
+            }
+            .seo-trigger-btn svg {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+            }
+
+            /* Estilos del Modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(8px);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            .modal-content {
+                background: white;
+                width: 90%;
+                max-width: 700px;
+                max-height: 85vh;
+                border-radius: 30px;
+                position: relative;
+                transform: scale(0.9) translateY(20px);
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                overflow: hidden;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
+            .modal-overlay.active .modal-content {
+                transform: scale(1) translateY(0);
+            }
+            .modal-close {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                background: #f7fafc;
+                border: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                font-size: 1.5rem;
+                line-height: 40px;
+                cursor: pointer;
+                color: #718096;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+            }
+            .modal-close:hover {
+                background: #edf2f7;
+                color: #2d3748;
+                transform: rotate(90deg);
+            }
+            .modal-inner {
+                padding: 3rem;
+                overflow-y: auto;
+                max-height: 85vh;
+            }
+            .modal-title {
                 font-size: 1.8rem;
                 font-weight: 800;
-                color: var(--text, #2d3748);
-                margin-bottom: 1.5rem;
-                letter-spacing: -0.5px;
+                color: #1a202c;
+                margin-bottom: 2rem;
+                line-height: 1.2;
+                padding-right: 2rem;
             }
-            .category-seo p {
+            .modal-body {
                 font-size: 1.1rem;
-                line-height: 1.75;
-                color: #4b5563;
-                margin-bottom: 1.2rem;
-                text-align: justify;
+                line-height: 1.8;
+                color: #4a5568;
             }
+            .modal-body p {
+                margin-bottom: 1.5rem;
+            }
+            .modal-body strong {
+                color: #2d3748;
+            }
+
             @media (max-width: 768px) {
-                .category-seo {
-                    margin: 3rem auto;
+                .modal-inner {
+                    padding: 2rem;
                 }
-                .category-seo h2 {
+                .modal-title {
                     font-size: 1.5rem;
                 }
-                .category-seo p {
+                .modal-body {
                     font-size: 1.05rem;
-                    text-align: left;
                 }
             }
         </style>
+
+        <script>
+            function openSeoModal() {
+                const modal = document.getElementById('seoModal');
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeSeoModal() {
+                const modal = document.getElementById('seoModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            // Cerrar al hacer clic fuera del contenido
+            window.onclick = function(event) {
+                const modal = document.getElementById('seoModal');
+                if (event.target == modal) {
+                    closeSeoModal();
+                }
+            }
+            // Cerrar con tecla Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeSeoModal();
+            });
+        </script>
     <% } %>
 
             <script>

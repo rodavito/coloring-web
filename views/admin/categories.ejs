@@ -59,10 +59,15 @@
                             placeholder="Descarga los mejores dibujos de..." required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="seo_text">Texto SEO Extendido (bloque inferior)</label>
+                        <label for="seo_title">Título del bloque informativo (Modal)</label>
+                        <input type="text" name="seo_title" id="seo_title" placeholder="Ej: ✨ Descubre más sobre estos dibujos">
+                        <small style="color: #888; font-size: 0.8rem;">Este título aparecerá arriba del grid y abrirá el texto en una ventana.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="seo_text">Contenido Informativo (Ventana flotante)</label>
                         <textarea name="seo_text" id="seo_text" rows="5"
                             placeholder="Párrafos SEO. Podés usar HTML como &lt;p&gt; y &lt;strong&gt;."></textarea>
-                        <small style="color: #888; font-size: 0.8rem;">Aparece debajo del grid de imágenes.</small>
+                        <small style="color: #888; font-size: 0.8rem;">Contenido que se mostrará al hacer clic en el título.</small>
                     </div>
                     <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 1rem;">Crear
                         Categoría</button>

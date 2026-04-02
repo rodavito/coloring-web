@@ -200,10 +200,10 @@ exports.getCategories = async (req, res) => {
 };
 
 exports.postCategory = async (req, res) => {
-    const { name, intro_text, emoji, seo_text } = req.body;
+    const { name, intro_text, emoji, seo_text, seo_title } = req.body;
     const slug = slugify(name, { lower: true, strict: true });
     try {
-        await db.query('INSERT INTO categories (name, slug, intro_text, emoji, seo_text) VALUES ($1, $2, $3, $4, $5)', [name, slug, intro_text, emoji, seo_text]);
+        await db.query('INSERT INTO categories (name, slug, intro_text, emoji, seo_text, seo_title) VALUES ($1, $2, $3, $4, $5, $6)', [name, slug, intro_text, emoji, seo_text, seo_title]);
         res.redirect((process.env.ADMIN_PATH || '/admin') + '/categories');
     } catch (err) {
         console.error(err);
@@ -230,7 +230,7 @@ exports.getEditCategory = async (req, res) => {
 
 exports.postEditCategory = async (req, res) => {
     const { id } = req.params;
-    const { name, intro_text, emoji, seo_text } = req.body;
+    const { name, intro_text, emoji, seo_text, seo_title } = req.body;
     const newSlug = slugify(name, { lower: true, strict: true });
 
     try {
@@ -241,8 +241,8 @@ exports.postEditCategory = async (req, res) => {
 
         // 2. Actualizar en la base de datos
         await db.query(
-            'UPDATE categories SET name = $1, slug = $2, intro_text = $3, emoji = $4, seo_text = $5 WHERE id = $6',
-            [name, newSlug, intro_text, emoji, seo_text, id]
+            'UPDATE categories SET name = $1, slug = $2, intro_text = $3, emoji = $4, seo_text = $5, seo_title = $6 WHERE id = $7',
+            [name, newSlug, intro_text, emoji, seo_text, seo_title, id]
         );
 
         // 3. Si el slug cambió, renombrar las carpetas de imágenes

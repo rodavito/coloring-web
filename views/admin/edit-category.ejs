@@ -22,9 +22,14 @@
                         categoría.</small>
                 </div>
                 <div class="form-group">
-                    <label for="seo_text">Texto SEO Extendido (bloque inferior)</label>
+                    <label for="seo_title">Título del bloque informativo (Modal)</label>
+                    <input type="text" name="seo_title" id="seo_title" value="<%= category.seo_title || '' %>" placeholder="Ej: ✨ Descubre más sobre estos dibujos">
+                    <small style="color: #888;">Este título aparecerá arriba del grid y abrirá el texto en una ventana.</small>
+                </div>
+                <div class="form-group">
+                    <label for="seo_text">Contenido Informativo (Ventana flotante)</label>
                     <textarea name="seo_text" id="seo_text" rows="8" placeholder="Podés pegar aquí párrafos completos con HTML básico como &lt;p&gt;, &lt;strong&gt;, etc."><%= category.seo_text || '' %></textarea>
-                    <small style="color: #888;">Este bloque aparece debajo del grid de imágenes, ideal para SEO y AdSense. Podés usar etiquetas HTML como &lt;p&gt; y &lt;strong&gt;.</small>
+                    <small style="color: #888;">Este contenido se mostrará en una ventana emergente al hacer clic en el título. Ideal para SEO y AdSense.</small>
                 </div>
 
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
