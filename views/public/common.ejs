@@ -89,19 +89,6 @@
         <% } %>
 
     <% if (locals.categorySeo && locals.categorySeoTitle) { %>
-        <!-- Modal para SEO -->
-        <div id="seoModal" class="modal-overlay">
-            <div class="modal-content">
-                <button class="modal-close" onclick="closeSeoModal()">&times;</button>
-                <div class="modal-inner">
-                    <h2 class="modal-title"><%= categorySeoTitle %></h2>
-                    <div class="modal-body">
-                        <%- locals.categorySeo %>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <style>
             .category-info-trigger {
                 max-width: 1200px;
@@ -137,137 +124,12 @@
                 width: 22px;
                 height: 22px;
                 fill: var(--primary, #a9e3f6);
-                transition: fill 0.3s ease;
             }
             .seo-trigger-btn:hover svg {
                 fill: var(--secondary, #4a90e2);
                 transform: rotate(15deg);
             }
-
-            /* Estilos del Modal */
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                width: 100%;
-                height: 100vh;
-                height: 100dvh;
-                background: rgba(0, 0, 0, 0.4);
-                backdrop-filter: blur(12px);
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            }
-            .modal-overlay.active {
-                opacity: 1;
-                visibility: visible;
-            }
-            .modal-content {
-                background: white;
-                width: 90%;
-                max-width: 700px;
-                max-height: 85vh;
-                border-radius: 30px;
-                position: relative;
-                transform: scale(0.9) translateY(20px);
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                overflow: hidden;
-                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            }
-            .modal-overlay.active .modal-content {
-                transform: scale(1) translateY(0);
-            }
-            .modal-close {
-                position: absolute;
-                top: 1.5rem;
-                right: 1.5rem;
-                background: #f7fafc;
-                border: none;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                font-size: 1.5rem;
-                line-height: 40px;
-                cursor: pointer;
-                color: #718096;
-                transition: all 0.2s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10;
-            }
-            .modal-close:hover {
-                background: #edf2f7;
-                color: #2d3748;
-                transform: rotate(90deg);
-            }
-            .modal-inner {
-                padding: 3rem;
-                overflow-y: auto;
-                max-height: 85vh;
-            }
-            .modal-title {
-                font-size: 1.8rem;
-                font-weight: 800;
-                color: #1a202c;
-                margin-bottom: 2rem;
-                line-height: 1.2;
-                padding-right: 2rem;
-            }
-            .modal-body {
-                font-size: 1.1rem;
-                line-height: 1.8;
-                color: #4a5568;
-            }
-            .modal-body p {
-                margin-bottom: 1.5rem;
-            }
-            .modal-body strong {
-                color: #2d3748;
-            }
-
-            @media (max-width: 768px) {
-                .modal-inner {
-                    padding: 2rem;
-                }
-                .modal-title {
-                    font-size: 1.5rem;
-                }
-                .modal-body {
-                    font-size: 1.05rem;
-                }
-            }
         </style>
-
-        <script>
-            function openSeoModal() {
-                const modal = document.getElementById('seoModal');
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-            function closeSeoModal() {
-                const modal = document.getElementById('seoModal');
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-            // Cerrar al hacer clic fuera del contenido
-            window.onclick = function(event) {
-                const modal = document.getElementById('seoModal');
-                if (event.target == modal) {
-                    closeSeoModal();
-                }
-            }
-            // Cerrar con tecla Escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeSeoModal();
-            });
-        </script>
     <% } %>
 
             <script>

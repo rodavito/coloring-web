@@ -40,6 +40,174 @@
         }
     });
 </script>
+<% if (locals.categorySeo && locals.categorySeoTitle) { %>
+    <!-- Modal para SEO (Ubicado en la raíz para evitar problemas de stacking context) -->
+    <div id="seoModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close-btn" onclick="closeSeoModal()">&times;</button>
+            <div class="modal-inner">
+                <h2 class="modal-title"><%= categorySeoTitle %></h2>
+                <div class="modal-body">
+                    <%- locals.categorySeo %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos del Modal Reubicado */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99999; /* Por encima de todo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 750px;
+            max-height: 85vh;
+            border-radius: 35px;
+            position: relative;
+            transform: scale(0.9) translateY(30px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        .modal-close {
+            position: absolute;
+            top: 1.8rem;
+            right: 1.8rem;
+            background: #f1f5f9;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            line-height: 45px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .modal-close:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+            transform: rotate(90deg);
+        }
+        .modal-inner {
+            padding: 4rem;
+            overflow-y: auto;
+            max-height: 85vh;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
+        /* Custom scrollbar for webkit */
+        .modal-inner::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-inner::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 850;
+            color: #0f172a;
+            margin-bottom: 2.5rem;
+            line-height: 1.1;
+            padding-right: 3rem;
+            letter-spacing: -0.5px;
+        }
+        .modal-body {
+            font-size: 1.15rem;
+            line-height: 1.85;
+            color: #334155;
+        }
+        .modal-body p {
+            margin-bottom: 1.8rem;
+        }
+        .modal-body strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .modal-inner {
+                padding: 2.5rem 1.5rem;
+            }
+            .modal-title {
+                font-size: 1.6rem;
+                margin-bottom: 1.5rem;
+            }
+            .modal-body {
+                font-size: 1.1rem;
+            }
+            .modal-close {
+                top: 1rem;
+                right: 1rem;
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+
+    <script>
+        function openSeoModal() {
+            const modal = document.getElementById('seoModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeSeoModal() {
+            const modal = document.getElementById('seoModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        // Cerrar al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('seoModal');
+            if (modal && event.target === modal) {
+                closeSeoModal();
+            }
+        });
+        // Tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeSeoModal();
+            }
+        });
+    </script>
+<% } %>
+
 </body>
 
 </html>
