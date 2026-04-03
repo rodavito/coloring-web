@@ -20,7 +20,26 @@
         </div>
     <% } %>
 
-    <div class="grid">
+    <% if (typeof locals !== 'undefined' && locals.subcategories && locals.subcategories.length > 0) { %>
+        <div style="max-width: 1300px; margin: 0 auto; padding: 0 2rem;">
+            <h3 style="margin-bottom: 0.5rem; font-size: 1.2rem; color: #4b5563;">Explorar más</h3>
+        </div>
+        <div class="subcategories-bar">
+            <% subcategories.forEach(subcat => { %>
+                <a href="/categoria/<%= categories.find(c => c.id === activeCategory).slug %>/<%= subcat.slug %>" 
+                   class="subcat-card <%= locals.activeSubcategory === subcat.id ? 'active' : '' %>">
+                    <div class="category-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: white;">
+                            <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                        </svg>
+                    </div>
+                    <h3><%= subcat.name %></h3>
+                </a>
+            <% }) %>
+        </div>
+    <% } %>
+
+    <div class="grid grid-4 grid-compact">
         <% if (images.length===0) { %>
             <p style="text-align: center; grid-column: 1/-1; padding: 5rem; color: #999;">No se encontraron dibujos.
                 ¡Vuelve pronto!</p>

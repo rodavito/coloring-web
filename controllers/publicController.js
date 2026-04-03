@@ -39,7 +39,7 @@ exports.getCommon = async (req, res) => {
 exports.getCategory = async (req, res) => {
     const { slug } = req.params;
     const page = parseInt(req.query.page) || 1;
-    const limit = 9;
+    const limit = 24;
     const offset = (page - 1) * limit;
 
     try {
@@ -61,18 +61,72 @@ exports.getCategory = async (req, res) => {
         const hasMore = totalImages > (page * limit);
 
         const catsResult = await db.query('SELECT * FROM categories ORDER BY name');
+        const subcatsResult = await db.query('SELECT * FROM subcategories WHERE category_id = $1 ORDER BY name', [category.id]);
 
         res.render('public/common', {
             title: `${category.name} - Dibujos para Colorear`,
             images: imagesResult.rows,
             categories: catsResult.rows,
+            subcategories: subcatsResult.rows,
             activeCategory: category.id,
+            activeSubcategory: null,
             categoryIntro: category.intro_text,
             categorySeo: category.seo_text || null,
             categorySeoTitle: category.seo_title || null,
             currentPage: page,
             hasMore,
             baseUrl: `/categoria/${slug}`
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};
+
+exports.getSubcategory = async (req, res) => {
+    const { catSlug, subSlug } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 24;
+    const offset = (page - 1) * limit;
+
+    try {
+        const catResult = await db.query('SELECT * FROM categories WHERE slug = $1', [catSlug]);
+        if (catResult.rows.length === 0) return res.status(404).send('Categoría no encontrada');
+        const category = catResult.rows[0];
+
+        const subcatResult = await db.query('SELECT * FROM subcategories WHERE slug = $1 AND category_id = $2', [subSlug, category.id]);
+        if (subcatResult.rows.length === 0) return res.status(404).send('Subcategoría no encontrada');
+        const subcategory = subcatResult.rows[0];
+
+        const imagesResult = await db.query(`
+      SELECT i.*, c.name as category_name, c.slug as category_slug
+      FROM images i 
+      JOIN categories c ON i.category_id = c.id 
+      WHERE i.subcategory_id = $1
+      ORDER BY i.created_at DESC
+      LIMIT $2 OFFSET $3
+    `, [subcategory.id, limit, offset]);
+
+        const countResult = await db.query('SELECT COUNT(*) FROM images WHERE subcategory_id = $1', [subcategory.id]);
+        const totalImages = parseInt(countResult.rows[0].count);
+        const hasMore = totalImages > (page * limit);
+
+        const catsResult = await db.query('SELECT * FROM categories ORDER BY name');
+        const subcatsResult = await db.query('SELECT * FROM subcategories WHERE category_id = $1 ORDER BY name', [category.id]);
+
+        res.render('public/common', {
+            title: `${subcategory.name} - ${category.name}`,
+            images: imagesResult.rows,
+            categories: catsResult.rows,
+            subcategories: subcatsResult.rows,
+            activeCategory: category.id,
+            activeSubcategory: subcategory.id,
+            categoryIntro: null,
+            categorySeo: null,
+            categorySeoTitle: null,
+            currentPage: page,
+            hasMore,
+            baseUrl: `/categoria/${catSlug}/${subSlug}`
         });
     } catch (err) {
         console.error(err);
@@ -116,7 +170,7 @@ exports.searchByTags = async (req, res) => {
     let { q } = req.query;
     q = (q || '').trim();
     const page = parseInt(req.query.page) || 1;
-    const limit = 9;
+    const limit = 24;
     const offset = (page - 1) * limit;
 
     try {
@@ -131,6 +185,8 @@ exports.searchByTags = async (req, res) => {
          OR immutable_unaccent(COALESCE(i.tags, '')) ILIKE public.unaccent($1)
          OR immutable_unaccent(COALESCE(i.description, '')) ILIKE public.unaccent($1)
          OR immutable_unaccent(COALESCE(i.alt_text, '')) ILIKE public.unaccent($1)
+         OR immutable_unaccent(COALESCE(c.name, '')) ILIKE public.unaccent($1)
+         OR i.subcategory_id IN (SELECT id FROM subcategories WHERE immutable_unaccent(name) ILIKE public.unaccent($1))
       ORDER BY i.created_at DESC
       LIMIT $2 OFFSET $3
     `, [searchPattern, limit, offset]);
@@ -142,6 +198,8 @@ exports.searchByTags = async (req, res) => {
          OR immutable_unaccent(COALESCE(i.tags, '')) ILIKE public.unaccent($1)
          OR immutable_unaccent(COALESCE(i.description, '')) ILIKE public.unaccent($1)
          OR immutable_unaccent(COALESCE(i.alt_text, '')) ILIKE public.unaccent($1)
+         OR immutable_unaccent(COALESCE(c.name, '')) ILIKE public.unaccent($1)
+         OR i.subcategory_id IN (SELECT id FROM subcategories WHERE immutable_unaccent(name) ILIKE public.unaccent($1))
     `, [searchPattern]);
 
         const totalImages = parseInt(countResult.rows[0].count);
@@ -153,7 +211,9 @@ exports.searchByTags = async (req, res) => {
             title: `Búsqueda: ${q}`,
             images: imagesResult.rows,
             categories: catsResult.rows,
+            subcategories: [], // No subcategories to show on generic search
             activeCategory: null,
+            activeSubcategory: null,
             currentPage: page,
             hasMore,
             baseUrl: `/buscar?q=${encodeURIComponent(q)}`

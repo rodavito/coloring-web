@@ -100,9 +100,11 @@ exports.getDashboard = async (req, res) => {
 exports.getUpload = async (req, res) => {
     try {
         const categoriesResults = await db.query('SELECT * FROM categories ORDER BY name');
+        const subcategoriesResults = await db.query('SELECT * FROM subcategories ORDER BY name');
         res.render('admin/upload', {
             title: 'Subir Imagen',
             categories: categoriesResults.rows,
+            subcategories: subcategoriesResults.rows,
             adminPath: process.env.ADMIN_PATH || '/admin'
         });
     } catch (err) {
@@ -112,8 +114,10 @@ exports.getUpload = async (req, res) => {
 };
 
 exports.postUpload = async (req, res) => {
-    const { title, alt_text, description, category_id, tags } = req.body;
+    const { title, alt_text, description, category_id, tags, subcategory_id } = req.body;
     const file = req.file;
+
+    const sub_id = subcategory_id ? parseInt(subcategory_id) : null;
 
     if (!file) return res.send('Debes subir una imagen');
 
@@ -174,8 +178,8 @@ exports.postUpload = async (req, res) => {
 
         // 5. Guardar en DB incluyendo datos de Cloudinary
         await db.query(
-            'INSERT INTO images (title, slug, alt_text, description, tags, filename, category_id, cloudinary_url, public_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-            [title, slug, alt_text, description, tags, slug, category_id, cloudinaryResult.secure_url, cloudinaryResult.public_id]
+            'INSERT INTO images (title, slug, alt_text, description, tags, filename, category_id, cloudinary_url, public_id, subcategory_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+            [title, slug, alt_text, description, tags, slug, category_id, cloudinaryResult.secure_url, cloudinaryResult.public_id, sub_id]
         );
 
         res.redirect(process.env.ADMIN_PATH || '/admin');
@@ -334,11 +338,13 @@ exports.getEditImage = async (req, res) => {
         if (imageResult.rows.length === 0) return res.redirect(process.env.ADMIN_PATH || '/admin');
 
         const categoriesResult = await db.query('SELECT * FROM categories ORDER BY name');
+        const subcategoriesResult = await db.query('SELECT * FROM subcategories ORDER BY name');
 
         res.render('admin/edit-image', {
             title: 'Editar Imagen',
             image: imageResult.rows[0],
             categories: categoriesResult.rows,
+            subcategories: subcategoriesResult.rows,
             adminPath: process.env.ADMIN_PATH || '/admin'
         });
     } catch (err) {
@@ -349,12 +355,14 @@ exports.getEditImage = async (req, res) => {
 
 exports.postEditImage = async (req, res) => {
     const { id } = req.params;
-    const { title, alt_text, description, category_id, tags } = req.body;
+    const { title, alt_text, description, category_id, tags, subcategory_id } = req.body;
+
+    const sub_id = subcategory_id ? parseInt(subcategory_id) : null;
 
     try {
         await db.query(
-            'UPDATE images SET title = $1, alt_text = $2, description = $3, category_id = $4, tags = $5 WHERE id = $6',
-            [title, alt_text, description, category_id, tags, id]
+            'UPDATE images SET title = $1, alt_text = $2, description = $3, category_id = $4, tags = $5, subcategory_id = $6 WHERE id = $7',
+            [title, alt_text, description, category_id, tags, sub_id, id]
         );
         res.redirect(process.env.ADMIN_PATH || '/admin');
     } catch (err) {
@@ -362,3 +370,94 @@ exports.postEditImage = async (req, res) => {
         res.send('Error al actualizar la imagen');
     }
 };
+
+// ======================
+// Subcategorías
+// ======================
+
+exports.getSubcategories = async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT s.*, c.name as category_name 
+            FROM subcategories s
+            JOIN categories c ON s.category_id = c.id
+            ORDER BY c.name, s.name
+        `);
+        const categoriesResult = await db.query('SELECT * FROM categories ORDER BY name');
+        res.render('admin/subcategories', {
+            title: 'Gestionar Subcategorías',
+            subcategories: result.rows,
+            categories: categoriesResult.rows,
+            adminPath: process.env.ADMIN_PATH || '/admin'
+        });
+    } catch (err) {
+        console.error(err);
+        res.send('Error al cargar subcategorías');
+    }
+};
+
+exports.postSubcategory = async (req, res) => {
+    const { name, category_id } = req.body;
+    const slug = slugify(name, { lower: true, strict: true });
+    try {
+        await db.query(
+            'INSERT INTO subcategories (name, slug, category_id) VALUES ($1, $2, $3)',
+            [name, slug, category_id]
+        );
+        res.redirect((process.env.ADMIN_PATH || '/admin') + '/subcategories');
+    } catch (err) {
+        console.error(err);
+        res.send('Error al crear subcategoría');
+    }
+};
+
+exports.getEditSubcategory = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await db.query('SELECT * FROM subcategories WHERE id = $1', [id]);
+        if (result.rows.length === 0) return res.redirect((process.env.ADMIN_PATH || '/admin') + '/subcategories');
+        const categoriesResult = await db.query('SELECT * FROM categories ORDER BY name');
+
+        res.render('admin/edit-subcategory', {
+            title: 'Editar Subcategoría',
+            subcategory: result.rows[0],
+            categories: categoriesResult.rows,
+            adminPath: process.env.ADMIN_PATH || '/admin'
+        });
+    } catch (err) {
+        console.error(err);
+        res.send('Error al cargar subcategoría');
+    }
+};
+
+exports.postEditSubcategory = async (req, res) => {
+    const { id } = req.params;
+    const { name, category_id } = req.body;
+    const slug = slugify(name, { lower: true, strict: true });
+
+    try {
+        await db.query(
+            'UPDATE subcategories SET name = $1, slug = $2, category_id = $3 WHERE id = $4',
+            [name, slug, category_id, id]
+        );
+        res.redirect((process.env.ADMIN_PATH || '/admin') + '/subcategories');
+    } catch (err) {
+        console.error(err);
+        res.send('Error al editar subcategoría');
+    }
+};
+
+exports.postDeleteSubcategory = async (req, res) => {
+    const { id } = req.params;
+    try {
+        // En base de datos, configuré ON DELETE CASCADE, pero el usuario pidió que los dibujos pasen a la padre
+        // En realidad en imágenes usamos ON DELETE SET NULL para subcategory_id, 
+        // por lo que simplemente se pondrá en NULL y mantendrá su category_id.
+        await db.query('DELETE FROM subcategories WHERE id = $1', [id]);
+        res.redirect((process.env.ADMIN_PATH || '/admin') + '/subcategories');
+    } catch (err) {
+        console.error(err);
+        res.send('Error al eliminar subcategoría');
+    }
+};
+

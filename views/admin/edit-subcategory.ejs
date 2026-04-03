@@ -1,0 +1,32 @@
+<%- include('../layout/header') %>
+
+    <div class="admin-form" style="max-width: 600px; animation: fadeIn 0.8s ease-out;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+            <h1 style="margin: 0; letter-spacing: -1px;">Editar Subcategoría ✏️</h1>
+            <a href="<%= adminPath %>/subcategories" style="color: #666; text-decoration: none;">&larr; Volver</a>
+        </div>
+
+        <form action="<%= adminPath %>/subcategories/edit/<%= subcategory.id %>" method="POST">
+            <div class="form-group">
+                <label for="name">Nombre de la Subcategoría</label>
+                <input type="text" name="name" id="name" value="<%= subcategory.name %>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category_id">Categoría Principal Padre</label>
+                <select name="category_id" id="category_id" required>
+                    <% categories.forEach(cat => { %>
+                        <option value="<%= cat.id %>" <%= subcategory.category_id === cat.id ? 'selected' : '' %>>
+                            <%= cat.name %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 1.2rem; margin-top: 1rem;">
+                Guardar Cambios
+            </button>
+        </form>
+    </div>
+
+<%- include('../layout/footer') %>

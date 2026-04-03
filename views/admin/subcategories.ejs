@@ -1,0 +1,56 @@
+<%- include('../layout/header') %>
+
+    <div style="display: flex; gap: 4rem; animation: fadeIn 0.8s ease-out;">
+        <div style="flex: 1.2;">
+            <h1 style="letter-spacing: -1px; margin-bottom: 2rem;">Subcategorías Creadas ✨</h1>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+                <% subcategories.forEach(subcat => { %>
+                    <div style="background: white; padding: 1.5rem; border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; transition: var(--transition);"
+                        onmouseover="this.style.transform='translateY(-5px)'"
+                        onmouseout="this.style.transform='translateY(0)'">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                            <div style="font-size: 1.5rem;">📂</div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a href="<%= adminPath %>/subcategories/edit/<%= subcat.id %>" title="Editar" style="text-decoration: none; font-size: 1.2rem;">✏️</a>
+                                <form action="<%= adminPath %>/subcategories/delete/<%= subcat.id %>" method="POST"
+                                    onsubmit="return confirm('¿Estás seguro? Los dibujos en esta subcategoría volverán a la categoría principal sin perderse.')">
+                                    <button type="submit" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0;">🗑️</button>
+                                </form>
+                            </div>
+                        </div>
+                        <strong style="font-size: 1.1rem; color: var(--text);">
+                            <%= subcat.name %>
+                        </strong>
+                        <span style="font-size: 0.8rem; color: #bbb; margin-top: 5px;">Padre: <%= subcat.category_name %></span>
+                    </div>
+                <% }) %>
+                <% if (subcategories.length === 0) { %>
+                    <p style="color: #999;">No hay subcategorías creadas aún.</p>
+                <% } %>
+            </div>
+        </div>
+
+        <div style="flex: 0.8;">
+            <div class="admin-form" style="margin: 0; position: sticky; top: 100px;">
+                <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;">Añadir nueva ✨</h2>
+                <p style="color: #888; margin-bottom: 2rem; font-size: 0.9rem;">Crea una subcategoría para agrupar dibujos dentro de una categoría principal.</p>
+                <form action="<%= adminPath %>/subcategories" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nombre de la Subcategoría</label>
+                        <input type="text" name="name" id="name" placeholder="Ej: Perros" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category_id">Categoría Principal Padre</label>
+                        <select name="category_id" id="category_id" required>
+                            <% categories.forEach(cat => { %>
+                                <option value="<%= cat.id %>"><%= cat.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 1rem;">Crear Subcategoría</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<%- include('../layout/footer') %>

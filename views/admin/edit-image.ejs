@@ -18,15 +18,29 @@
                             actual</p>
                     </div>
 
+                <div>
                     <div class="form-group">
-                        <label for="category_id">Categoría</label>
-                        <select name="category_id" id="category_id" required>
+                        <label for="category_id">Categoría Principal</label>
+                        <select name="category_id" id="category_id" required onchange="filterSubcats()">
                             <% categories.forEach(cat=> { %>
                                 <option value="<%= cat.id %>" <%=image.category_id==cat.id ? 'selected' : '' %>>
                                     <%= cat.name %>
                                 </option>
                                 <% }) %>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subcategory_id">Subcategoría (Opcional)</label>
+                        <select name="subcategory_id" id="subcategory_id">
+                            <option value="">Ninguna</option>
+                            <% subcategories.forEach(subcat => { %>
+                                <option value="<%= subcat.id %>" data-category="<%= subcat.category_id %>" <%=image.subcategory_id==subcat.id ? 'selected' : '' %>>
+                                    <%= subcat.name %>
+                                </option>
+                            <% }) %>
+                        </select>
+                        <small style="color: #888;">El dibujo también aparecerá en la categoría principal.</small>
                     </div>
                 </div>
 
@@ -63,5 +77,39 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function filterSubcats() {
+            const catId = document.getElementById('category_id').value;
+            const subcatSelect = document.getElementById('subcategory_id');
+            const options = subcatSelect.querySelectorAll('option');
+            
+            // Si el trigger de onchange no es inicial, limpiar selección. 
+            // Para eso verificamos un logica. Lo simplificaremos de forma que no resetee al cargar la página
+            const currentSelected = subcatSelect.value;
+            
+            let foundCurrent = false;
+
+            options.forEach(opt => {
+                if(opt.value === '') {
+                    opt.style.display = ''; // Siempre mostrar 'Ninguna'
+                } else if(opt.getAttribute('data-category') === catId) {
+                    opt.style.display = '';
+                    if (opt.value === currentSelected) foundCurrent = true;
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+
+            if (!foundCurrent && currentSelected !== '') {
+                subcatSelect.value = '';
+            }
+        }
+        
+        // Execute on load if there's a default category
+        if(document.getElementById('category_id').value) {
+            filterSubcats();
+        }
+    </script>    
 
     <%- include('../layout/footer') %>

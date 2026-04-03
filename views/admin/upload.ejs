@@ -23,15 +23,30 @@
                         <img id="preview" style="width: 100%; border-radius: 20px; margin-top: 1rem; display: none;">
                     </div>
 
+                <div>
                     <div class="form-group">
-                        <label for="category_id">Categoría</label>
-                        <select name="category_id" id="category_id" required>
-                            <% categories.forEach(cat=> { %>
+                        <label for="category_id">Categoría Principal</label>
+                        <select name="category_id" id="category_id" required onchange="filterSubcats()">
+                            <option value="" disabled selected>Selecciona una categoría</option>
+                            <% categories.forEach(cat => { %>
                                 <option value="<%= cat.id %>">
                                     <%= cat.name %>
                                 </option>
-                                <% }) %>
+                            <% }) %>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subcategory_id">Subcategoría (Opcional)</label>
+                        <select name="subcategory_id" id="subcategory_id">
+                            <option value="">Ninguna</option>
+                            <% subcategories.forEach(subcat => { %>
+                                <option value="<%= subcat.id %>" data-category="<%= subcat.category_id %>">
+                                    <%= subcat.name %>
+                                </option>
+                            <% }) %>
+                        </select>
+                        <small style="color: #888;">El dibujo también aparecerá en la categoría principal.</small>
                     </div>
                 </div>
 
@@ -81,6 +96,29 @@
             if (input.files && input.files[0]) {
                 reader.readAsDataURL(input.files[0]);
             }
+        }
+
+        function filterSubcats() {
+            const catId = document.getElementById('category_id').value;
+            const subcatSelect = document.getElementById('subcategory_id');
+            const options = subcatSelect.querySelectorAll('option');
+            
+            subcatSelect.value = ''; // Reset selection
+            
+            options.forEach(opt => {
+                if(opt.value === '') {
+                    opt.style.display = ''; // Siempre mostrar 'Ninguna'
+                } else if(opt.getAttribute('data-category') === catId) {
+                    opt.style.display = '';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        }
+        
+        // Execute on load if there's a default category
+        if(document.getElementById('category_id').value) {
+            filterSubcats();
         }
     </script>
 

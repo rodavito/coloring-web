@@ -37,6 +37,14 @@ router.post('/categories', isAuthenticated, adminController.postCategory);
 router.get('/categories/edit/:id', isAuthenticated, adminController.getEditCategory);
 router.post('/categories/edit/:id', isAuthenticated, adminController.postEditCategory);
 router.post('/categories/delete/:id', isAuthenticated, adminController.postDeleteCategory);
+
+// Rutas de Subcategorías
+router.get('/subcategories', isAuthenticated, adminController.getSubcategories);
+router.post('/subcategories', isAuthenticated, adminController.postSubcategory);
+router.get('/subcategories/edit/:id', isAuthenticated, adminController.getEditSubcategory);
+router.post('/subcategories/edit/:id', isAuthenticated, adminController.postEditSubcategory);
+router.post('/subcategories/delete/:id', isAuthenticated, adminController.postDeleteSubcategory);
+
 router.post('/delete/:id', isAuthenticated, adminController.postDelete);
 router.get('/edit/:id', isAuthenticated, adminController.getEditImage);
 router.post('/edit/:id', isAuthenticated, adminController.postEditImage);
