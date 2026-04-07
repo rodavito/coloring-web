@@ -1,0 +1,35 @@
+<%- include('../layout/header') %>
+
+    <div style="max-width: 800px; margin: 0 auto; animation: fadeIn 0.8s ease-out;">
+        <h1 style="letter-spacing: -1px; margin-bottom: 2rem;">Editar Artículo ✨</h1>
+        
+        <div class="admin-form" style="padding: 2.5rem; background: white; border-radius: 32px; box-shadow: var(--shadow); border: 1px solid var(--border);">
+            <form action="<%= adminPath %>/articles/edit/<%= article.id %>" method="POST">
+                <div class="form-group">
+                    <label for="title">Título del Artículo</label>
+                    <input type="text" name="title" id="title" value="<%= article.title %>" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="tag">Etiqueta (Tag)</label>
+                        <input type="text" name="tag" id="tag" value="<%= article.tag || '' %>" placeholder="Ej: Educación">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="reading_time">Tiempo de lectura</label>
+                        <input type="text" name="reading_time" id="reading_time" value="<%= article.reading_time || '' %>" placeholder="Ej: 5 min">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="content">Contenido (HTML permitido)</label>
+                    <textarea name="content" id="content" rows="20" required><%= article.content %></textarea>
+                    <small style="color: #888; font-size: 0.8rem; margin-top: 5px; display: block;">Modifica el contenido de tu artículo.</small>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a href="<%= adminPath %>/articles" class="btn btn-secondary" style="background: #f0f0f0; color: #666; flex: 1; text-decoration: none; text-align: center; border-radius: 12px; display: flex; align-items: center; justify-content: center;">Cancelar</a>
+                    <button type="submit" class="btn btn-secondary" style="flex: 2; padding: 1rem;">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<%- include('../layout/footer') %>

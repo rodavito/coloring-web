@@ -109,6 +109,21 @@ body {
   background: rgba(0, 0, 0, 0.02);
 }
 
+.nav-separator {
+  width: 2px;
+  height: 24px;
+  background: #eee;
+  margin: 0 0.5rem;
+  border-radius: var(--pill);
+  display: inline-block;
+}
+
+@media (max-width: 1024px) {
+  .nav-separator {
+    display: none;
+  }
+}
+
 .menu-toggle,
 .menu-close {
   display: none;

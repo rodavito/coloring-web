@@ -12,5 +12,7 @@ router.get('/privacidad', publicController.getPrivacy);
 router.get('/cookies', publicController.getCookies);
 router.get('/aviso-legal', publicController.getLegal);
 router.get('/sobre-nosotros', publicController.getAbout);
+router.get('/articulo/:slug', publicController.getArticle);
+router.get('/articulos', publicController.getArticlesList);
 
 module.exports = router;

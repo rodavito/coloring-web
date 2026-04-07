@@ -1,0 +1,35 @@
+<%- include('../layout/header') %>
+
+    <div style="max-width: 800px; margin: 0 auto; animation: fadeIn 0.8s ease-out;">
+        <h1 style="letter-spacing: -1px; margin-bottom: 2rem;">Nuevo Artículo ✨</h1>
+        
+        <div class="admin-form" style="padding: 2.5rem; background: white; border-radius: 32px; box-shadow: var(--shadow); border: 1px solid var(--border);">
+            <form action="<%= adminPath %>/articles/create" method="POST">
+                <div class="form-group">
+                    <label for="title">Título del Artículo</label>
+                    <input type="text" name="title" id="title" placeholder="Ej: Los beneficios de colorear" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="tag">Etiqueta (Tag)</label>
+                        <input type="text" name="tag" id="tag" placeholder="Ej: Educación" value="Lectura">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="reading_time">Tiempo de lectura</label>
+                        <input type="text" name="reading_time" id="reading_time" placeholder="Ej: 5 min" value="5 min">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="content">Contenido (HTML permitido)</label>
+                    <textarea name="content" id="content" rows="20" placeholder="Escribe aquí tu artículo..." required></textarea>
+                    <small style="color: #888; font-size: 0.8rem; margin-top: 5px; display: block;">Usa HTML para dar formato al contenido.</small>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a href="<%= adminPath %>/articles" class="btn btn-secondary" style="background: #f0f0f0; color: #666; flex: 1; text-decoration: none; text-align: center; border-radius: 12px; display: flex; align-items: center; justify-content: center;">Cancelar</a>
+                    <button type="submit" class="btn btn-secondary" style="flex: 2; padding: 1rem;">Publicar Artículo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<%- include('../layout/footer') %>

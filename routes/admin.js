@@ -49,4 +49,12 @@ router.post('/delete/:id', isAuthenticated, adminController.postDelete);
 router.get('/edit/:id', isAuthenticated, adminController.getEditImage);
 router.post('/edit/:id', isAuthenticated, adminController.postEditImage);
 
+// Rutas de Artículos
+router.get('/articles', isAuthenticated, adminController.getArticles);
+router.get('/articles/create', isAuthenticated, adminController.getCreateArticle);
+router.post('/articles/create', isAuthenticated, adminController.postCreateArticle);
+router.get('/articles/edit/:id', isAuthenticated, adminController.getEditArticle);
+router.post('/articles/edit/:id', isAuthenticated, adminController.postEditArticle);
+router.post('/articles/delete/:id', isAuthenticated, adminController.postDeleteArticle);
+
 module.exports = router;

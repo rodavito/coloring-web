@@ -37,12 +37,31 @@ app.use(session({
     cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 horas
 }));
 
-// Middleware para pasar datos de sesión a todas las vistas
-app.use((req, res, next) => {
+const db = require('./models/db');
+
+// Middleware para pasar datos a todas las vistas
+app.use(async (req, res, next) => {
     res.locals.userId = req.session.userId || null;
     res.locals.adminPath = ADMIN_PATH;
     res.locals.ORIGINAL_URL = req.originalUrl;
-    next();
+
+    try {
+        // Solo cargar datos compartidos en rutas que no sean assets
+        if (!req.path.includes('.') && !req.path.startsWith('/api')) {
+            const [categories, articles] = await Promise.all([
+                db.query('SELECT * FROM categories ORDER BY name'),
+                db.query('SELECT title, slug FROM articles ORDER BY created_at DESC')
+            ]);
+            res.locals.categories = categories.rows;
+            res.locals.articles = articles.rows;
+        }
+        next();
+    } catch (err) {
+        console.error('Error en middleware global:', err);
+        res.locals.categories = [];
+        res.locals.articles = [];
+        next();
+    }
 });
 
 // Rutas

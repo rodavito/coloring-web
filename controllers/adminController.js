@@ -461,3 +461,87 @@ exports.postDeleteSubcategory = async (req, res) => {
     }
 };
 
+// ======================
+// Artículos
+// ======================
+
+exports.getArticles = async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM articles ORDER BY created_at DESC');
+        res.render('admin/articles', {
+            title: 'Gestionar Artículos',
+            articles: result.rows,
+            adminPath: process.env.ADMIN_PATH || '/admin'
+        });
+    } catch (err) {
+        console.error(err);
+        res.send('Error al cargar artículos');
+    }
+};
+
+exports.getCreateArticle = (req, res) => {
+    res.render('admin/create-article', {
+        title: 'Crear Artículo',
+        adminPath: process.env.ADMIN_PATH || '/admin'
+    });
+};
+
+exports.postCreateArticle = async (req, res) => {
+    const { title, content, tag, reading_time } = req.body;
+    const slug = slugify(title, { lower: true, strict: true });
+    try {
+        await db.query(
+            'INSERT INTO articles (title, slug, content, tag, reading_time) VALUES ($1, $2, $3, $4, $5)',
+            [title, slug, content, tag || 'Lectura', reading_time || '5 min']
+        );
+        res.redirect((process.env.ADMIN_PATH || '/admin') + '/articles');
+    } catch (err) {
+        console.error(err);
+        res.send('Error al crear artículo');
+    }
+};
+
+exports.getEditArticle = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await db.query('SELECT * FROM articles WHERE id = $1', [id]);
+        if (result.rows.length === 0) return res.redirect((process.env.ADMIN_PATH || '/admin') + '/articles');
+
+        res.render('admin/edit-article', {
+            title: 'Editar Artículo',
+            article: result.rows[0],
+            adminPath: process.env.ADMIN_PATH || '/admin'
+        });
+    } catch (err) {
+        console.error(err);
+        res.send('Error al cargar artículo');
+    }
+};
+
+exports.postEditArticle = async (req, res) => {
+    const { id } = req.params;
+    const { title, content, tag, reading_time } = req.body;
+    const slug = slugify(title, { lower: true, strict: true });
+
+    try {
+        await db.query(
+            'UPDATE articles SET title = $1, slug = $2, content = $3, tag = $4, reading_time = $5 WHERE id = $6',
+            [title, slug, content, tag, reading_time, id]
+        );
+        res.redirect((process.env.ADMIN_PATH || '/admin') + '/articles');
+    } catch (err) {
+        console.error(err);
+        res.send('Error al editar artículo');
+    }
+};
+
+exports.postDeleteArticle = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.query('DELETE FROM articles WHERE id = $1', [id]);
+        res.redirect((process.env.ADMIN_PATH || '/admin') + '/articles');
+    } catch (err) {
+        console.error(err);
+        res.send('Error al eliminar artículo');
+    }
+};

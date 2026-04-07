@@ -308,3 +308,32 @@ exports.getAbout = async (req, res) => {
         res.status(500).send('Error en el servidor');
     }
 };
+exports.getArticle = async (req, res) => {
+    const { slug } = req.params;
+    try {
+        const result = await db.query('SELECT * FROM articles WHERE slug = $1', [slug]);
+        if (result.rows.length === 0) return res.status(404).render('404', { title: 'Artículo no encontrado' });
+
+        const article = result.rows[0];
+        res.render('public/article', {
+            title: article.title,
+            article
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};
+
+exports.getArticlesList = async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM articles ORDER BY created_at DESC');
+        res.render('public/articles', {
+            title: 'Artículos de Pintacolores',
+            articles: result.rows
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+};

@@ -11,24 +11,24 @@
     <meta property="og:description"
         content="<%= locals.description || 'Descarga e imprime miles de dibujos para colorear gratis.' %>">
     <meta property="og:type" content="website">
-    <title>PintaColores</title>
+    <title>Pinta Colores</title>
     <link rel="icon" type="image/png" href="/favicon.png?v=1">
     <link rel="stylesheet" href="/css/style.css?v=5">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816678097058395"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 
-    <% if (locals.adminPath && typeof ORIGINAL_URL !== 'undefined' && ORIGINAL_URL.startsWith(adminPath)) { %>
+    <% if (locals.adminPath && typeof ORIGINAL_URL !=='undefined' && ORIGINAL_URL.startsWith(adminPath)) { %>
         <meta name="robots" content="noindex, nofollow">
-    <% } %>
+        <% } %>
 
-    <% if (typeof ORIGINAL_URL !== 'undefined') { %>
-        <link rel="canonical" href="https://pintacolores.com<%= ORIGINAL_URL.split('?')[0] %>">
-    <% } %>
+            <% if (typeof ORIGINAL_URL !=='undefined' ) { %>
+                <link rel="canonical" href="https://pintacolores.com<%= ORIGINAL_URL.split('?')[0] %>">
+                <% } %>
 </head>
 
 <body>
@@ -79,6 +79,8 @@
                                         <% } %>
                     </div>
                 </div>
+                <span class="nav-separator"></span>
+                <a href="/articulos" class="nav-item <%= (typeof ORIGINAL_URL !== 'undefined' && (ORIGINAL_URL.startsWith('/articulos') || ORIGINAL_URL.startsWith('/articulo/'))) ? 'active' : '' %>">Artículos</a>
             </nav>
             <div class="header-right">
                 <form action="/search" method="GET" class="search-form">
