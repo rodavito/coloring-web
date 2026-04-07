@@ -228,6 +228,7 @@ exports.getSitemap = async (req, res) => {
     try {
         const images = await db.query('SELECT slug, created_at FROM images ORDER BY created_at DESC');
         const categories = await db.query('SELECT slug FROM categories');
+        const articles = await db.query('SELECT slug, created_at FROM articles ORDER BY created_at DESC');
 
         const baseUrl = `${req.protocol}://${req.get('host')}`;
 
@@ -237,14 +238,24 @@ exports.getSitemap = async (req, res) => {
         // Home
         xml += `<url><loc>${baseUrl}/</loc><priority>1.0</priority></url>`;
 
+        // Artículos (Main listing)
+        xml += `<url><loc>${baseUrl}/articulos</loc><priority>0.9</priority></url>`;
+
         // Categorías
         categories.rows.forEach(cat => {
             xml += `<url><loc>${baseUrl}/categoria/${cat.slug}</loc><priority>0.8</priority></url>`;
         });
 
+        // Artículos Individuales
+        articles.rows.forEach(art => {
+            const date = art.created_at ? art.created_at.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+            xml += `<url><loc>${baseUrl}/articulo/${art.art_slug || art.slug}</loc><lastmod>${date}</lastmod><priority>0.7</priority></url>`;
+        });
+
         // Dibujos
         images.rows.forEach(img => {
-            xml += `<url><loc>${baseUrl}/dibujo/${img.slug}</loc><lastmod>${img.created_at.toISOString().split('T')[0]}</lastmod><priority>0.6</priority></url>`;
+            const date = img.created_at ? img.created_at.toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+            xml += `<url><loc>${baseUrl}/dibujo/${img.slug}</loc><lastmod>${date}</lastmod><priority>0.6</priority></url>`;
         });
 
         xml += '</urlset>';
