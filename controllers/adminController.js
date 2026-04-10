@@ -406,8 +406,10 @@ exports.postSubcategory = async (req, res) => {
         );
         res.redirect((process.env.ADMIN_PATH || '/admin') + '/subcategories');
     } catch (err) {
-        console.error(err);
-        res.send('Error al crear subcategoría');
+        console.error("Error en postSubcategory:", err);
+        let msg = 'Error al crear subcategoría.';
+        if (err.code === '23505') msg = 'Error: Ya existe una subcategoría con ese nombre en esta categoría.';
+        res.status(500).send(`${msg} (Detalle: ${err.message})`);
     }
 };
 
@@ -442,8 +444,10 @@ exports.postEditSubcategory = async (req, res) => {
         );
         res.redirect((process.env.ADMIN_PATH || '/admin') + '/subcategories');
     } catch (err) {
-        console.error(err);
-        res.send('Error al editar subcategoría');
+        console.error("Error en postEditSubcategory:", err);
+        let msg = 'Error al editar subcategoría.';
+        if (err.code === '23505') msg = 'Error: Ya existe una subcategoría con ese nombre en esta categoría.';
+        res.status(500).send(`${msg} (Detalle: ${err.message})`);
     }
 };
 
