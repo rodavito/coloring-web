@@ -194,6 +194,7 @@ exports.searchByTags = async (req, res) => {
         const countResult = await db.query(`
       SELECT COUNT(DISTINCT i.id) 
       FROM images i 
+      LEFT JOIN categories c ON i.category_id = c.id
       WHERE immutable_unaccent(i.title) ILIKE public.unaccent($1)
          OR immutable_unaccent(COALESCE(i.tags, '')) ILIKE public.unaccent($1)
          OR immutable_unaccent(COALESCE(i.description, '')) ILIKE public.unaccent($1)
