@@ -2,10 +2,15 @@
 
     <div class="hero">
         <div class="hero-box">
-            <h1>Dibujos de <%= images.length> 0 ? images[0].category_name : 'Categoría' %></h1>
-            <p>
-                <%= locals.categoryIntro || 'Descarga e imprime los mejores dibujos para colorear.' %>
-            </p>
+            <% if (locals.baseUrl && locals.baseUrl.startsWith('/buscar')) { %>
+                <h1>Resultados para: "<%= title.replace('Búsqueda: ', '') %>"</h1>
+                <p>Encuentra tus dibujos favoritos para colorear e imprimir.</p>
+            <% } else { %>
+                <h1>Dibujos de <%= images.length > 0 ? images[0].category_name : 'Categoría' %></h1>
+                <p>
+                    <%= locals.categoryIntro || 'Descarga e imprime los mejores dibujos para colorear.' %>
+                </p>
+            <% } %>
         </div>
     </div>
 
