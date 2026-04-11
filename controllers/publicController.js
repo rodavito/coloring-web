@@ -219,8 +219,8 @@ exports.searchByTags = async (req, res) => {
             baseUrl: `/buscar?q=${encodeURIComponent(q)}`
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Error en el servidor');
+        console.error("Search API Error:", err);
+        res.status(500).send('Error en el servidor: ' + err.message);
     }
 };
 
