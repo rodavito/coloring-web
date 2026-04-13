@@ -7,7 +7,8 @@ const publicController = require('../controllers/publicController');
 // DEBEN ir ANTES de los comodines dinámicos (/:param)
 // ─────────────────────────────────────────────────────────────────────────────
 router.get('/', publicController.getCommon);
-router.get('/search', publicController.searchByTags);
+router.get('/buscar', publicController.searchByTags);
+router.get('/search', (req, res) => res.redirect(301, '/buscar' + (req.url.includes('?') ? '?' + req.url.split('?')[1] : '')));
 router.get('/sitemap.xml', publicController.getSitemap);
 router.get('/privacidad', publicController.getPrivacy);
 router.get('/cookies', publicController.getCookies);
