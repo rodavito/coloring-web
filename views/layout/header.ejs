@@ -31,9 +31,9 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1816678097058395"
         crossorigin="anonymous"></script>
 
-    <% if (locals.adminPath && typeof ORIGINAL_URL !=='undefined' && ORIGINAL_URL.startsWith(adminPath)) { %>
+    <% if (typeof ORIGINAL_URL !=='undefined' && ((locals.adminPath && ORIGINAL_URL.startsWith(adminPath)) || ORIGINAL_URL.startsWith('/buscar') || ORIGINAL_URL.startsWith('/search'))) { %>
         <meta name="robots" content="noindex, nofollow">
-        <% } %>
+    <% } %>
 
             <% if (typeof ORIGINAL_URL !=='undefined' ) { %>
                 <link rel="canonical" href="https://pintacolores.com<%= ORIGINAL_URL.split('?')[0] %>">
@@ -74,17 +74,17 @@
                     <div class="dropdown-content">
                         <% if (locals.categories) { %>
                             <% categories.forEach(cat=> { %>
-                                <a href="/categoria/<%= cat.slug %>">
+                                <a href="/<%= cat.slug %>/">
                                     <%= cat.emoji || '📁' %>
                                         <%= cat.name %>
                                 </a>
                                 <% }) %>
                                     <% } else { %>
-                                        <a href="/categoria/animales">🐶 Animales</a>
-                                        <a href="/categoria/fantasia">🦄 Fantasía</a>
-                                        <a href="/categoria/espacio">🚀 Espacio</a>
-                                        <a href="/categoria/profesiones-oficios">🧑‍🚒 Profesiones</a>
-                                        <a href="/categoria/vehiculos">🏎️ Vehículos</a>
+                                        <a href="/animales/">🐶 Animales</a>
+                                        <a href="/fantasia/">🦄 Fantasía</a>
+                                        <a href="/espacio/">🚀 Espacio</a>
+                                        <a href="/profesiones-oficios/">🧑‍🚒 Profesiones</a>
+                                        <a href="/vehiculos/">🏎️ Vehículos</a>
                                         <% } %>
                     </div>
                 </div>

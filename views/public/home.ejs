@@ -14,7 +14,7 @@
             <button class="slider-btn prev" id="slider-prev">❮</button>
             <div class="category-grid slider-mode" id="category-slider">
                 <% categories.forEach(cat=> { %>
-                    <a href="/categoria/<%= cat.slug %>" class="category-card">
+                    <a href="/<%= cat.slug %>/" class="category-card">
                         <div class="category-icon">
                             <svg class="icon-svg" viewBox="0 0 24 24" style="width: 50px; height: 50px;">
                                 <path
@@ -76,8 +76,15 @@
         <h2 class="section-title">Últimos dibujos añadidos</h2>
         <div class="grid">
             <% images.forEach(img=> { %>
+                <%
+                    const imgHomeUrl = img.category_slug
+                        ? (img.subcategory_slug
+                            ? `/${img.category_slug}/${img.subcategory_slug}/${img.slug}`
+                            : `/${img.category_slug}/${img.slug}`)
+                        : `/dibujo/${img.slug}`;
+                %>
                 <div class="card">
-                    <a href="/dibujo/<%= img.slug %>">
+                    <a href="<%= imgHomeUrl %>">
                         <% const displaySrc=img.cloudinary_url ||
                             `/assets/images/webp/${img.category_slug}/${img.filename}.webp`; %>
                             <img src="<%= displaySrc %>" alt="<%= img.alt_text %>" loading="lazy">
@@ -88,7 +95,7 @@
                       "@context": "https://schema.org/",
                       "@type": "ImageObject",
                       "contentUrl": "<%= displaySrc.startsWith('http') ? displaySrc : 'https://pintacolores.com' + displaySrc %>",
-                      "url": "https://pintacolores.com/dibujo/<%= img.slug %>",
+                      "url": "https://pintacolores.com<%= imgHomeUrl %>",
                       "creator": {
                         "@type": "Organization",
                         "name": "PintaColores"
@@ -111,7 +118,7 @@
                             </span>
                         </div>
                         <div class="card-actions">
-                            <a href="/dibujo/<%= img.slug %>" class="btn btn-view">Ver</a>
+                            <a href="<%= imgHomeUrl %>" class="btn btn-view">Ver</a>
                             <% 
                                 const downloadSrc = img.cloudinary_url 
                                     ? img.cloudinary_url.replace(/\.webp$/, '.jpg') 

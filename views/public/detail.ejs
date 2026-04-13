@@ -15,7 +15,7 @@
               "@context": "https://schema.org/",
               "@type": "ImageObject",
               "contentUrl": "<%= displaySrc.startsWith('http') ? displaySrc : 'https://pintacolores.com' + displaySrc %>",
-              "url": "https://pintacolores.com/dibujo/<%= image.slug %>",
+              "url": "https://pintacolores.com<%= image.subcategory_slug ? `/${image.category_slug}/${image.subcategory_slug}/${image.slug}` : `/${image.category_slug}/${image.slug}` %>",
               "creator": {
                 "@type": "Organization",
                 "name": "PintaColores"
@@ -112,9 +112,14 @@
             }
         </script>
         <div class="detail-info-col">
-            <a href="/categoria/<%= image.category_slug %>" class="detail-category-badge">
+            <a href="/<%= image.category_slug %>/" class="detail-category-badge">
                 <%= image.category_name %>
             </a>
+            <% if (image.subcategory_name && image.subcategory_slug) { %>
+            <a href="/<%= image.category_slug %>/<%= image.subcategory_slug %>/" class="detail-category-badge" style="margin-left:0.5rem;">
+                <%= image.subcategory_name %>
+            </a>
+            <% } %>
             <h1 class="detail-title">
                 <%= image.title %>
             </h1>

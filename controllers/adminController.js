@@ -5,6 +5,7 @@ const path = require('path');
 const slugify = require('slugify');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
+const { imageUrl, categoryUrl, subcategoryUrl } = require('../utils/urlHelper');
 
 // Configuración de Cloudinary
 cloudinary.config({
@@ -249,26 +250,55 @@ exports.postEditCategory = async (req, res) => {
             [name, newSlug, intro_text, emoji, seo_text, seo_title, id]
         );
 
-        // 3. Si el slug cambió, renombrar las carpetas de imágenes
+        // 3. Si el slug cambió, renombrar carpetas y crear redirecciones 301
         if (oldSlug !== newSlug) {
+            // 3a. Renombrar carpetas de imágenes locales
             const types = ['webp', 'jpg'];
             types.forEach(type => {
-                const oldPath = path.join(__dirname, '../public/assets/images', type, oldSlug);
-                const newPath = path.join(__dirname, '../public/assets/images', type, newSlug);
+                const oldFsPath = path.join(__dirname, '../public/assets/images', type, oldSlug);
+                const newFsPath = path.join(__dirname, '../public/assets/images', type, newSlug);
 
-                if (fs.existsSync(oldPath)) {
-                    // Si ya existe la carpeta destino, mover contenidos (o simplemente renombrar si no existe)
-                    if (fs.existsSync(newPath)) {
-                        const files = fs.readdirSync(oldPath);
+                if (fs.existsSync(oldFsPath)) {
+                    if (fs.existsSync(newFsPath)) {
+                        const files = fs.readdirSync(oldFsPath);
                         files.forEach(file => {
-                            fs.renameSync(path.join(oldPath, file), path.join(newPath, file));
+                            fs.renameSync(path.join(oldFsPath, file), path.join(newFsPath, file));
                         });
-                        fs.rmdirSync(oldPath);
+                        fs.rmdirSync(oldFsPath);
                     } else {
-                        fs.renameSync(oldPath, newPath);
+                        fs.renameSync(oldFsPath, newFsPath);
                     }
                 }
             });
+
+            // 3b. Redirección de la categoría: /{old}/ → /{new}/
+            await db.query(
+                'INSERT INTO redirects (old_path, new_path) VALUES ($1, $2) ON CONFLICT (old_path) DO UPDATE SET new_path = EXCLUDED.new_path',
+                [categoryUrl(oldSlug), categoryUrl(newSlug)]
+            );
+
+            // 3c. Redirecciones de subcategorías de esta categoría
+            const subcatsResult = await db.query('SELECT slug FROM subcategories WHERE category_id = $1', [id]);
+            for (const sub of subcatsResult.rows) {
+                await db.query(
+                    'INSERT INTO redirects (old_path, new_path) VALUES ($1, $2) ON CONFLICT (old_path) DO UPDATE SET new_path = EXCLUDED.new_path',
+                    [subcategoryUrl(oldSlug, sub.slug), subcategoryUrl(newSlug, sub.slug)]
+                );
+            }
+
+            // 3d. Redirecciones de cada dibujo en esta categoría
+            const imgsResult = await db.query(
+                'SELECT i.slug, s.slug as subcategory_slug FROM images i LEFT JOIN subcategories s ON i.subcategory_id = s.id WHERE i.category_id = $1',
+                [id]
+            );
+            for (const img of imgsResult.rows) {
+                const oldImgPath = imageUrl(oldSlug, img.slug, img.subcategory_slug);
+                const newImgPath = imageUrl(newSlug, img.slug, img.subcategory_slug);
+                await db.query(
+                    'INSERT INTO redirects (old_path, new_path) VALUES ($1, $2) ON CONFLICT (old_path) DO UPDATE SET new_path = EXCLUDED.new_path',
+                    [oldImgPath, newImgPath]
+                );
+            }
         }
 
         res.redirect((process.env.ADMIN_PATH || '/admin') + '/categories');
@@ -360,10 +390,46 @@ exports.postEditImage = async (req, res) => {
     const sub_id = subcategory_id ? parseInt(subcategory_id) : null;
 
     try {
+        // 1. Obtener datos actuales del dibujo para calcular la URL antigua
+        const oldResult = await db.query(`
+            SELECT i.slug, c.slug as category_slug, s.slug as subcategory_slug
+            FROM images i
+            JOIN categories c ON i.category_id = c.id
+            LEFT JOIN subcategories s ON i.subcategory_id = s.id
+            WHERE i.id = $1
+        `, [id]);
+
+        if (oldResult.rows.length === 0) return res.redirect(process.env.ADMIN_PATH || '/admin');
+
+        const old = oldResult.rows[0];
+        const oldPath = imageUrl(old.category_slug, old.slug, old.subcategory_slug);
+
+        // 2. Obtener slugs nuevos para calcular la URL nueva
+        const newCatResult = await db.query('SELECT slug FROM categories WHERE id = $1', [category_id]);
+        const newCatSlug = newCatResult.rows[0]?.slug || old.category_slug;
+
+        let newSubSlug = null;
+        if (sub_id) {
+            const newSubResult = await db.query('SELECT slug FROM subcategories WHERE id = $1', [sub_id]);
+            newSubSlug = newSubResult.rows[0]?.slug || null;
+        }
+
+        const newPath = imageUrl(newCatSlug, old.slug, newSubSlug);
+
+        // 3. Si la URL cambió, insertar redirección 301
+        if (oldPath !== newPath) {
+            await db.query(
+                'INSERT INTO redirects (old_path, new_path) VALUES ($1, $2) ON CONFLICT (old_path) DO UPDATE SET new_path = EXCLUDED.new_path',
+                [oldPath, newPath]
+            );
+        }
+
+        // 4. Actualizar el dibujo en la base de datos
         await db.query(
             'UPDATE images SET title = $1, alt_text = $2, description = $3, category_id = $4, tags = $5, subcategory_id = $6 WHERE id = $7',
             [title, alt_text, description, category_id, tags, sub_id, id]
         );
+
         res.redirect(process.env.ADMIN_PATH || '/admin');
     } catch (err) {
         console.error(err);
@@ -454,10 +520,43 @@ exports.postEditSubcategory = async (req, res) => {
 exports.postDeleteSubcategory = async (req, res) => {
     const { id } = req.params;
     try {
-        // En base de datos, configuré ON DELETE CASCADE, pero el usuario pidió que los dibujos pasen a la padre
-        // En realidad en imágenes usamos ON DELETE SET NULL para subcategory_id, 
-        // por lo que simplemente se pondrá en NULL y mantendrá su category_id.
+        // 1. Obtener info de la subcategoría y su categoría padre
+        const subcatInfo = await db.query(`
+            SELECT s.slug as sub_slug, c.slug as cat_slug
+            FROM subcategories s
+            JOIN categories c ON s.category_id = c.id
+            WHERE s.id = $1
+        `, [id]);
+
+        if (subcatInfo.rows.length > 0) {
+            const { cat_slug, sub_slug } = subcatInfo.rows[0];
+
+            // 2. Redirigir todos los dibujos afectados: /{cat}/{sub}/{slug} → /{cat}/{slug}
+            const imgsResult = await db.query(`
+                SELECT i.slug
+                FROM images i
+                WHERE i.subcategory_id = $1
+            `, [id]);
+
+            for (const img of imgsResult.rows) {
+                const oldImgPath = imageUrl(cat_slug, img.slug, sub_slug);
+                const newImgPath = imageUrl(cat_slug, img.slug, null);
+                await db.query(
+                    'INSERT INTO redirects (old_path, new_path) VALUES ($1, $2) ON CONFLICT (old_path) DO UPDATE SET new_path = EXCLUDED.new_path',
+                    [oldImgPath, newImgPath]
+                );
+            }
+
+            // 3. Redirigir la URL de la subcategoría: /{cat}/{sub}/ → /{cat}/
+            await db.query(
+                'INSERT INTO redirects (old_path, new_path) VALUES ($1, $2) ON CONFLICT (old_path) DO UPDATE SET new_path = EXCLUDED.new_path',
+                [subcategoryUrl(cat_slug, sub_slug), categoryUrl(cat_slug)]
+            );
+        }
+
+        // 4. Eliminar subcategoría (ON DELETE SET NULL pone subcategory_id en NULL en imágenes)
         await db.query('DELETE FROM subcategories WHERE id = $1', [id]);
+
         res.redirect((process.env.ADMIN_PATH || '/admin') + '/subcategories');
     } catch (err) {
         console.error(err);

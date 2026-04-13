@@ -31,7 +31,7 @@
         </div>
         <div class="subcategories-bar">
             <% subcategories.forEach(subcat => { %>
-                <a href="/categoria/<%= categories.find(c => c.id === activeCategory).slug %>/<%= subcat.slug %>" 
+                <a href="/<%= categories.find(c => c.id === activeCategory).slug %>/<%= subcat.slug %>/" 
                    class="subcat-card <%= locals.activeSubcategory === subcat.id ? 'active' : '' %>">
                     <div class="category-icon">
                         <svg class="icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: white;">
@@ -51,8 +51,15 @@
             <% } %>
 
                 <% images.forEach(img=> { %>
+                    <%
+                        const imgCommonUrl = img.category_slug
+                            ? (img.subcategory_slug
+                                ? `/${img.category_slug}/${img.subcategory_slug}/${img.slug}`
+                                : `/${img.category_slug}/${img.slug}`)
+                            : `/dibujo/${img.slug}`;
+                    %>
                     <div class="card">
-                        <a href="/dibujo/<%= img.slug %>">
+                        <a href="<%= imgCommonUrl %>">
                             <% const displaySrc=img.cloudinary_url ||
                                 `/assets/images/webp/${img.category_slug}/${img.filename}.webp`; %>
                                 <img src="<%= displaySrc %>" alt="<%= img.alt_text %>" loading="lazy">
@@ -63,7 +70,7 @@
                           "@context": "https://schema.org/",
                           "@type": "ImageObject",
                           "contentUrl": "<%= displaySrc.startsWith('http') ? displaySrc : 'https://pintacolores.com' + displaySrc %>",
-                          "url": "https://pintacolores.com/dibujo/<%= img.slug %>",
+                          "url": "https://pintacolores.com<%= imgCommonUrl %>",
                           "creator": {
                             "@type": "Organization",
                             "name": "PintaColores"
@@ -86,7 +93,7 @@
                                 </span>
                             </div>
                             <div class="card-actions">
-                                <a href="/dibujo/<%= img.slug %>" class="btn btn-view">Ver</a>
+                                <a href="<%= imgCommonUrl %>" class="btn btn-view">Ver</a>
                                 <% const downloadSrc=img.cloudinary_url ||
                                     `/assets/images/jpg/${img.category_slug}/${img.filename}.jpg`; %>
                                     <a href="<%= downloadSrc %>" download="<%= img.slug %>" class="btn btn-download-sq"
