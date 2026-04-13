@@ -65,8 +65,8 @@ app.use(async (req, res, next) => {
 });
 
 // Rutas
-app.use('/', publicRoutes);
 app.use(ADMIN_PATH, adminRoutes);
+app.use('/', publicRoutes);
 
 // Manejo de errores 404
 app.use((req, res) => {
